@@ -22,7 +22,7 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
-        },
+        },  
       },
     }
   )
@@ -31,10 +31,10 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  // IMPORTANT: DO NOT REMOVE auth.getClaims()
-  const { data } = await supabase.auth.getClaims()
-
-  const user = data?.claims
+  // IMPORTANT: DO NOT REMOVE auth.getUser ()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (
     !user &&

@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: Rules when adding any frontend code
 alwaysApply: false
 ---
-- Only use componen
+- Only use components from shadcn as much as possible.
+- Use typescript for everything.
