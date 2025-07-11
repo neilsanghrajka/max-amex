@@ -8,11 +8,12 @@ import { User } from "@supabase/supabase-js";
 export const POST = route(
   InitiatePaymentRequest,
   InitiatePaymentResponse,
-  async (request: InitiatePaymentRequest, user: User) => {
+  async (_request: InitiatePaymentRequest, _user: User) => {
     // TODO: Add a row in the DB for the payment.
 
     // TOOD: Initiate ingess job
     // TODO: Return the jobId
+    console.log(_user);
     return { jobId: "123" };
   },
 );

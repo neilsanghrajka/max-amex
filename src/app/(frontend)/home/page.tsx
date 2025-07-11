@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-
 import { LogoutButton } from "@/components/logout-button";
 import { PaymentButton } from "@/components/payment-button";
 import { createClient } from "@/lib/supabase/server";
