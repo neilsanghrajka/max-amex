@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "db:generate": "pnpm dlx drizzle-kit generate",
+    "db:migrate": "pnpm dlx drizzle-kit migrate",
+    "db:studio": "pnpm dlx drizzle-kit studio",
     "inngest": "pnpm dlx inngest-cli@latest dev --poll-interval 60"
   },
   "dependencies": {
@@ -16,13 +19,16 @@
     "@supabase/supabase-js": "^2.50.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.0",
     "inngest": "^3.40.1",
     "lucide-react": "^0.525.0",
     "next": "15.3.4",
+    "postgres": "^3.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.0.2"
+    "zod": "^4.0.2",
+    "drizzle-orm": "^0.44.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -30,9 +36,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
   }
