@@ -9,7 +9,7 @@ export default async function HomePage() {
   return (
     <div className="flex h-svh w-full items-center justify-center gap-2">
       <p>
-        Hello <span>{data.claims.email}</span>
+        Hello <span>{data?.claims?.email}</span>
       </p>
       <LogoutButton />
       <PaymentButton />

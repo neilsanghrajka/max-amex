@@ -9,7 +9,7 @@ enum CardType {
 // Request Schema
 export const InitiatePaymentRequest = z.object({
   cardType: z.enum(CardType),
-  qty: z.number().min(1).max(6),
+  quantity: z.number().min(1).max(6),
   amount: z.number().refine((val: number) => val === 1000 || val === 1500, {
     message: "Amount must be either 1000 or 1500",
   }),

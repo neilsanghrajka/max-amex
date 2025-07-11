@@ -12,7 +12,7 @@ export function PaymentButton() {
         },
         body: JSON.stringify({
           cardType: "MRCC",
-          qty: 1,
+          quantity: 1,
           amount: 1000,
         }),
       });
