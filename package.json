@@ -10,7 +10,8 @@
     "db:generate": "pnpm dlx drizzle-kit generate",
     "db:migrate": "pnpm dlx drizzle-kit migrate",
     "db:studio": "pnpm dlx drizzle-kit studio",
-    "inngest": "pnpm dlx inngest-cli@latest dev --poll-interval 60"
+    "inngest": "pnpm dlx inngest-cli@latest dev --poll-interval 60",
+    "format": "pnpm exec prettier . --write"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
