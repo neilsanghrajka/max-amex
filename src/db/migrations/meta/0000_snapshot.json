@@ -1,11 +1,11 @@
 {
-  "id": "00000000-0000-0000-0000-000000000000",
-  "prevId": "",
+  "id": "55d287c6-c869-4a91-9dba-641faa502569",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.SMS Webhooks": {
-      "name": "SMS Webhooks",
+    "public.sms_webhooks": {
+      "name": "sms_webhooks",
       "schema": "",
       "columns": {
         "id": {
@@ -15,13 +15,14 @@
           "notNull": true,
           "identity": {
             "type": "byDefault",
-            "name": "\"SMS Webhooks_id_seq\"",
+            "name": "sms_webhooks_id_seq",
+            "schema": "public",
             "increment": "1",
+            "startWith": "1",
             "minValue": "1",
             "maxValue": "9223372036854775807",
-            "startWith": "1",
-            "cycle": false,
-            "schema": "public"
+            "cache": "1",
+            "cycle": false
           }
         },
         "created_at": {
@@ -49,8 +50,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     }
   },
@@ -61,11 +62,8 @@
   "policies": {},
   "views": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "internal": {
     "tables": {}
   }
 }
