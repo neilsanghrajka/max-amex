@@ -1,6 +1,5 @@
 import { inngest } from "@/lib/inngest/client";
 
-
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },

@@ -46,8 +46,8 @@ From now on, the workflow is "schema-first". You write the schema in code, and D
 
     ```typescript
     // src/db/schema/index.ts
-    export * from './smsWebhooks';
-    export * from './users'; // Add this line
+    export * from "./smsWebhooks";
+    export * from "./users"; // Add this line
     ```
 
 3.  **Generate Migration**: Create the SQL migration file based on your schema changes.
@@ -60,7 +60,7 @@ From now on, the workflow is "schema-first". You write the schema in code, and D
 
     ```bash
     npx drizzle-kit migrate
-    ``` 
+    ```
 
 ## Querying the Database
 
@@ -73,11 +73,11 @@ All standard Drizzle methods (`select`, `insert`, `update`, `delete`, etc.) are 
 Here is an example of how to fetch all records from the `smsWebhooks` table in a server-side component or API route.
 
 ```typescript
-import { db } from '@/db';
-import { smsWebhooks } from '@/db/schema';
+import { db } from "@/db";
+import { smsWebhooks } from "@/db/schema";
 
 export async function getWebhooks() {
   const allWebhooks = await db.select().from(smsWebhooks);
   return allWebhooks;
 }
-``` 
+```
