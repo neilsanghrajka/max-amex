@@ -1,4 +1,25 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "Checking for pending Drizzle migrations..."
+pnpm db:generate > /dev/null 2>&1   # run quietly
+
+# ------------------------------------------------------------------
+# 1. Did db:generate MODIFY an already-tracked file that is *not*
+#    part of the current commit?   (working-tree vs index)
+if ! git diff --quiet -- src/db/migrations; then
+  echo "❌  db:generate modified existing migration files that are not staged." >&2
+  git diff --name-status -- src/db/migrations | sed 's/^/  /' >&2
+  echo "Stage the changes (git add) or revert them, then commit again." >&2
+  exit 1
+fi
+
+# 2. Did it CREATE any new (untracked) files?
+if [ -n "$(git ls-files --others --exclude-standard src/db/migrations)" ]; then
+  echo "❌  db:generate created new migration files that are not staged:" >&2
+  git ls-files --others --exclude-standard src/db/migrations | sed 's/^/  /' >&2
+  echo "Add them with 'git add' (or remove them) and commit again." >&2
+  exit 1
+fi
+# ------------------------------------------------------------------
+
+echo "✅  No pending migrations found."
 
 pnpm format && pnpm lint 

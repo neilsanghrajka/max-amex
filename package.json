@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:generate": "pnpm dlx drizzle-kit generate",
-    "db:migrate": "pnpm dlx drizzle-kit migrate",
-    "db:studio": "pnpm dlx drizzle-kit studio",
+    "db:generate": "pnpm exec drizzle-kit generate",
+    "db:migrate": "pnpm exec drizzle-kit migrate",
+    "db:studio": "pnpm exec drizzle-kit studio",
     "inngest": "pnpm dlx inngest-cli@latest dev --poll-interval 60",
     "format": "pnpm exec prettier . --write",
     "prepare": "husky"
