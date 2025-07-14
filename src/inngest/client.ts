@@ -6,7 +6,7 @@ import { z } from "zod";
 // All event payloads
 type Events = {
   [K in keyof typeof AppEventSchemas]: {
-    data: z.infer<typeof AppEventSchemas[K]>;
+    data: z.infer<(typeof AppEventSchemas)[K]>;
   };
 };
 
