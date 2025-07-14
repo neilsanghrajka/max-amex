@@ -27,7 +27,7 @@ export const POST = route(
     await inngest.send({
       name: EventNames.PAYMENT_INITIATE,
       data: {
-      jobId: job.id,
+        jobId: job.id,
       },
     });
 
