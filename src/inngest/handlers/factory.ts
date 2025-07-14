@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ConcurrencyOption } from "inngest/types";
 import { GetFunctionInput, GetEvents } from "inngest";
-import { inngest } from "@/inngest";
+import { inngest } from "@/inngest/client";
 
 // For some reason this is how inngest defines it :facepalm:
 type RetryCount =

@@ -1,15 +1,10 @@
 import { db } from "@/db";
 import { paymentJobTable } from "@/db/schema/";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
-import { createEventHandler, EventHandler } from "../factory";
-import { EventName } from "../events";
+import { createEventHandler, EventHandler } from "@/inngest/handlers/factory";
+import { PaymentInitiateSchema, EventNames } from "@/inngest/handlers/events";
 
-const PAYMENT_INITIATE_EVENT = EventName.PAYMENT_INITIATE;
-
-export const PaymentInitiateSchema = z.object({
-  jobId: z.number(),
-});
+const PAYMENT_INITIATE_EVENT = EventNames.PAYMENT_INITIATE;
 
 // EVENT HANDLER
 const handler: EventHandler<
