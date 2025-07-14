@@ -14,4 +14,4 @@ export const inngest = new Inngest({
   schemas: new EventSchemas().fromRecord<Events>(),
 });
 
-export const sendEvent = inngest.send; 
+export const sendEvent = inngest.send;
