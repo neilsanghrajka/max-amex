@@ -14,5 +14,3 @@ export const inngest = new Inngest({
   id: "max-amex",
   schemas: new EventSchemas().fromRecord<Events>(),
 });
-
-export const sendEvent = inngest.send;
