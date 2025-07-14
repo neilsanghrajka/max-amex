@@ -6,7 +6,6 @@ import {
 import { User } from "@supabase/supabase-js";
 import { db } from "@/db";
 import { paymentJobTable } from "@/db/schema/paymentJob";
-import { sendPaymentEvent } from "@/inngest/functions/payment";
 
 export const POST = route(
   InitiatePaymentRequest,
@@ -24,7 +23,7 @@ export const POST = route(
       .returning({ id: paymentJobTable.id });
 
     // TODO: Initiate Ingress Job
-    await sendPaymentEvent(job.id);
+    // await sendPaymentEvent(job.id);
 
     // TODO: Return the jobId
     return { jobId: job.id.toString() };
