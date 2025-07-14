@@ -1,8 +1,9 @@
 import { db } from "@/db";
 import { paymentJobTable } from "@/db/schema/";
 import { eq } from "drizzle-orm";
-import { createEventHandler, EventHandler } from "@/inngest/handlers/factory";
-import { PaymentInitiateSchema, EventNames } from "@/inngest/handlers/events";
+import { createEventHandler, EventHandler } from "@/inngest/factory";
+import { EventNames } from "@/inngest/events";
+import { PaymentInitiateSchema } from "@/inngest/payment/types";
 
 const PAYMENT_INITIATE_EVENT = EventNames.PAYMENT_INITIATE;
 
