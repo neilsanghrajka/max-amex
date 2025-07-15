@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const AmazonLoginRequestedSchema = z.object({});
+export const AmazonLoginSchema = z.object({});
 
-export type AmazonLoginRequestedType = z.infer<
-  typeof AmazonLoginRequestedSchema
+export type AmazonLoginType = z.infer<
+  typeof AmazonLoginSchema
 >;
 
-export const AmazonRedeemRequestedSchema = z.object({});
+export const AmazonRedeemSchema = z.object({});
 
-export type AmazonRedeemRequestedType = z.infer<
-  typeof AmazonRedeemRequestedSchema
+export type AmazonRedeemType = z.infer<
+  typeof AmazonRedeemSchema
 >;
