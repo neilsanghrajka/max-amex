@@ -18,7 +18,7 @@ const handler: EventHandler<
   // Request OTP
   await step.run("request-otp", async () => {
     const success = await requestOtp(data.mobile, data.email);
-    
+
     if (!success) {
       throw new Error("Failed to request OTP");
     }
@@ -28,7 +28,6 @@ const handler: EventHandler<
 
   // TODO: Wait for OTP
   // TODO: Return "Auth token"
-
 
   return { auth_token: "TODO", message: "Gyftrr login function completed" };
 };
