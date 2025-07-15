@@ -10,7 +10,9 @@ const handler: EventHandler<
   typeof AmazonRedeemSchema
 > = async (data: AmazonRedeemType, step) => {
   await step.run("log-start", async () => {
-    console.log(`Amazon redeem for job ${data.jobId}, ordinal ${data.ordinal}, voucher: ${data.voucherCode}`);
+    console.log(
+      `Amazon redeem for job ${data.jobId}, ordinal ${data.ordinal}, voucher: ${data.voucherCode}`,
+    );
     return { logged: true };
   });
 
@@ -21,12 +23,12 @@ const handler: EventHandler<
     return { logged: true };
   });
 
-  return { 
-    success: true, 
+  return {
+    success: true,
     message: "Amazon redeem function completed",
     jobId: data.jobId,
     ordinal: data.ordinal,
-    voucherCode: data.voucherCode
+    voucherCode: data.voucherCode,
   };
 };
 

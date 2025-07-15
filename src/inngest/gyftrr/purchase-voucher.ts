@@ -13,14 +13,18 @@ const handler: EventHandler<
   typeof GyftrrPurchaseVoucherSchema
 > = async (data: GyftrrPurchaseVoucherType, step) => {
   await step.run("log-start", async () => {
-    console.log(`Gyftrr purchase voucher for job ${data.jobId}, ordinal ${data.ordinal}`);
+    console.log(
+      `Gyftrr purchase voucher for job ${data.jobId}, ordinal ${data.ordinal}`,
+    );
     return { logged: true };
   });
 
   await step.sleep("gyftrr-processing", "5s");
 
   await step.run("log-completion", async () => {
-    console.log(`Gyftrr purchase voucher completed for job ${data.jobId}, ordinal ${data.ordinal}`);
+    console.log(
+      `Gyftrr purchase voucher completed for job ${data.jobId}, ordinal ${data.ordinal}`,
+    );
     return { logged: true };
   });
 

@@ -18,7 +18,9 @@ const handler: EventHandler<
 
   await step.run("generate-payment-link", async () => {
     const paymentLink = `https://gyftr.com/payment/voucher-${data.jobId}-${data.ordinal}`;
-    console.log(`Generated payment link for purchase ${data.ordinal}: ${paymentLink}`);
+    console.log(
+      `Generated payment link for purchase ${data.ordinal}: ${paymentLink}`,
+    );
     return { paymentLink };
   });
 
@@ -31,10 +33,16 @@ const handler: EventHandler<
   });
 
   // Hard-coded voucher codes for now (in real implementation, these would come from elsewhere)
-  const voucherCodes = [`VOUCHER-${data.jobId}-${data.ordinal}-1`, `VOUCHER-${data.jobId}-${data.ordinal}-2`];
-  
+  const voucherCodes = [
+    `VOUCHER-${data.jobId}-${data.ordinal}-1`,
+    `VOUCHER-${data.jobId}-${data.ordinal}-2`,
+  ];
+
   await step.run("log-voucher-codes", async () => {
-    console.log(`Generated voucher codes for purchase ${data.ordinal}:`, voucherCodes);
+    console.log(
+      `Generated voucher codes for purchase ${data.ordinal}:`,
+      voucherCodes,
+    );
     return { voucherCodes };
   });
 
@@ -57,7 +65,12 @@ const handler: EventHandler<
     return { logged: true };
   });
 
-  return { success: true, ordinal: data.ordinal, jobId: data.jobId, voucherCodes };
+  return {
+    success: true,
+    ordinal: data.ordinal,
+    jobId: data.jobId,
+    voucherCodes,
+  };
 };
 
 // EVENT FUNCTION
