@@ -1,6 +1,9 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
-import { GyftrrPurchaseVoucherSchema, GyftrrPurchaseVoucherType } from "./types";
+import {
+  GyftrrPurchaseVoucherSchema,
+  GyftrrPurchaseVoucherType,
+} from "./types";
 
 const GYFTRR_PURCHASE_VOUCHER_EVENT = EventNames.GYFTRR_PURCHASE_VOUCHER;
 
@@ -11,7 +14,10 @@ const handler: EventHandler<
 > = async (data: GyftrrPurchaseVoucherType, step) => {
   console.log("Gyftrr purchase voucher - barebones function executed");
   console.log(data, step);
-  return { success: true, message: "Gyftrr purchase voucher function completed" };
+  return {
+    success: true,
+    message: "Gyftrr purchase voucher function completed",
+  };
 };
 
 // EVENT FUNCTION
@@ -25,4 +31,4 @@ export const gyftrrPurchaseVoucherEventHandler = createEventHandler<
   3, // Retry count
   GyftrrPurchaseVoucherSchema,
   handler,
-); 
+);

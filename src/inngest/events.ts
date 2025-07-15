@@ -8,10 +8,7 @@ import {
   GyftrLoginRequestedSchema,
   GyftrLoginCompletedSchema,
 } from "@/inngest/gyftrr-old/types";
-import {
-  AmazonLoginSchema,
-  AmazonRedeemSchema,
-} from "@/inngest/amazon/types";
+import { AmazonLoginSchema, AmazonRedeemSchema } from "@/inngest/amazon/types";
 import {
   GyftrrLoginSchema,
   GyftrrPurchaseVoucherSchema,

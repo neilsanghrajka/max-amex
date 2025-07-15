@@ -1,9 +1,6 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
-import {
-  AmazonRedeemSchema,
-  AmazonRedeemType,
-} from "./types";
+import { AmazonRedeemSchema, AmazonRedeemType } from "./types";
 
 const AMAZON_REDEEM_EVENT = EventNames.AMAZON_REDEEM;
 

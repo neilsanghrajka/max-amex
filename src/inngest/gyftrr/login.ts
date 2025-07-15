@@ -25,4 +25,4 @@ export const gyftrrLoginEventHandler = createEventHandler<
   3, // Retry count
   GyftrrLoginSchema,
   handler,
-); 
+);
