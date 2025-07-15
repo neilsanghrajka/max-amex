@@ -1,0 +1,683 @@
+openapi: 3.1.0
+info:
+  title: Gyftr Amex API
+  version: 1.0.0
+  description: API for user authentication, browsing brands, and managing cart and orders on the Gyftr platform.
+servers:
+  - url: https://api.gyftr.com/amex-api/api/v1
+tags:
+  - name: Auth
+    description: Operations related to user authentication
+  - name: Brands
+    description: Operations to retrieve brand and product information
+  - name: Cart
+    description: Operations for managing the shopping cart
+  - name: Orders
+    description: Operations for creating and managing orders
+parameters:
+  - $ref: "#/components/parameters/AcceptHeader"
+  - $ref: "#/components/parameters/AcceptEncodingHeader"
+  - $ref: "#/components/parameters/AcceptLanguageHeader"
+  - $ref: "#/components/parameters/ContentTypeHeader"
+  - $ref: "#/components/parameters/DNTHeader"
+  - $ref: "#/components/parameters/OriginHeader"
+  - $ref: "#/components/parameters/PriorityHeader"
+  - $ref: "#/components/parameters/SecChUaHeader"
+  - $ref: "#/components/parameters/SecChUaMobileHeader"
+  - $ref: "#/components/parameters/SecChUaPlatformHeader"
+  - $ref: "#/components/parameters/SecFetchDestHeader"
+  - $ref: "#/components/parameters/SecFetchModeHeader"
+  - $ref: "#/components/parameters/SecFetchSiteHeader"
+  - $ref: "#/components/parameters/UserAgentHeader"
+paths:
+  /user/auth:
+    post:
+      tags:
+        - Auth
+      summary: Request OTP for Authentication
+      description: Sends a One-Time Password (OTP) to the user's registered mobile number for authentication.
+      operationId: requestOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+      responses:
+        "200":
+          description: OTP sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - code
+                  - error_status
+                  - message
+                properties:
+                  code:
+                    type: integer
+                    description: HTTP status code.
+                  error_status:
+                    type: string
+                    description: Error status indicator. '0' for success.
+                  message:
+                    type: string
+                    description: A confirmation message.
+  /user/auth-validate:
+    post:
+      tags:
+        - Auth
+      summary: Validate OTP and Authenticate User
+      description: Authenticates a user by validating the provided email, mobile number, and OTP. Returns an authentication token upon success.
+      operationId: validateOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthValidateRequest"
+      responses:
+        "200":
+          description: Authentication successful.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthValidateResponse"
+  /brand/{slug}:
+    get:
+      tags:
+        - Brands
+      summary: Get Brand Details
+      description: Retrieves detailed information about a specific brand and its available products using the brand's slug.
+      operationId: getBrandBySlug
+      parameters:
+        - $ref: "#/components/parameters/SlugPath"
+      responses:
+        "200":
+          description: Successfully retrieved brand details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBrandResponse"
+  /cart/add-to-cart:
+    post:
+      tags:
+        - Cart
+      summary: Add Products to Cart
+      description: Adds one or more products to the authenticated user's shopping cart.
+      operationId: addToCart
+      security:
+        - tokenAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToCartRequest"
+      responses:
+        "200":
+          description: Products successfully added to the cart.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddToCartResponse"
+  /order/create-order:
+    post:
+      tags:
+        - Orders
+      summary: Create an Order
+      description: Creates an order from the items specified by cart item IDs for the authenticated user.
+      operationId: createOrder
+      security:
+        - tokenAuth: []
+      parameters:
+        - $ref: "#/components/parameters/TokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "200":
+          description: Order created successfully and payment form details returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateOrderResponse"
+components:
+  parameters:
+    AcceptHeader:
+      name: accept
+      in: header
+      required: true
+      schema:
+        type: string
+        default: "application/json, text/plain, */*"
+    AcceptEncodingHeader:
+      name: accept-encoding
+      in: header
+      required: true
+      schema:
+        type: string
+        default: "gzip, deflate, br, zstd"
+    AcceptLanguageHeader:
+      name: accept-language
+      in: header
+      required: true
+      schema:
+        type: string
+        default: "en-US,en;q=0.9"
+    ContentTypeHeader:
+      name: content-type
+      in: header
+      required: true
+      schema:
+        type: string
+        default: "application/json;charset=UTF-8"
+    DNTHeader:
+      name: dnt
+      in: header
+      required: false
+      schema:
+        type: string
+        default: "1"
+    OriginHeader:
+      name: origin
+      in: header
+      required: true
+      schema:
+        type: string
+        default: "https://www.gyftr.com"
+    PriorityHeader:
+      name: priority
+      in: header
+      required: false
+      schema:
+        type: string
+        default: "u=1, i"
+    SecChUaHeader:
+      name: sec-ch-ua
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '"Not)A;Brand";v="8", "Chromium";v="138"'
+    SecChUaMobileHeader:
+      name: sec-ch-ua-mobile
+      in: header
+      required: false
+      schema:
+        type: string
+        default: "?0"
+    SecChUaPlatformHeader:
+      name: sec-ch-ua-platform
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '"macOS"'
+    SecFetchDestHeader:
+      name: sec-fetch-dest
+      in: header
+      required: true
+      schema:
+        type: string
+        default: empty
+    SecFetchModeHeader:
+      name: sec-fetch-mode
+      in: header
+      required: true
+      schema:
+        type: string
+        default: cors
+    SecFetchSiteHeader:
+      name: sec-fetch-site
+      in: header
+      required: true
+      schema:
+        type: string
+        default: same-site
+    UserAgentHeader:
+      name: user-agent
+      in: header
+      required: true
+      schema:
+        type: string
+        default: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+    TokenHeader:
+      name: token
+      in: header
+      required: true
+      description: Authentication token for protected endpoints.
+      schema:
+        type: string
+    SlugPath:
+      name: slug
+      in: path
+      required: true
+      description: The unique slug identifying the brand.
+      schema:
+        type: string
+  schemas:
+    AuthRequest:
+      type: object
+      required:
+        - mobileNumber
+        - email
+      properties:
+        mobileNumber:
+          type: string
+        email:
+          type: string
+          format: email
+    AuthValidateRequest:
+      type: object
+      required:
+        - mobileNumber
+        - email
+        - otp
+      properties:
+        mobileNumber:
+          type: string
+        email:
+          type: string
+          format: email
+        otp:
+          type: string
+          description: 6-digit One-Time Password.
+    User:
+      type: object
+      required:
+        - id
+        - phone
+        - email
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        dob:
+          type: ["string", "null"]
+          format: date
+        anniversary:
+          type: ["string", "null"]
+          format: date
+        gender:
+          type: ["string", "null"]
+        webengage_id:
+          type: integer
+    AuthValidateResponse:
+      type: object
+      required:
+        - code
+        - error_status
+        - auth_token
+      properties:
+        code:
+          type: integer
+        error_status:
+          type: string
+        data:
+          $ref: "#/components/schemas/User"
+        auth_token:
+          type: string
+          description: JWT authentication token.
+    BrandDetails:
+      type: object
+      required:
+        - id
+        - name
+        - slug
+      properties:
+        "@brand_id := brands.id":
+          type: integer
+        id:
+          type: integer
+        service_charge:
+          type: number
+        slug:
+          type: string
+        checkout_step:
+          type: string
+        order_limit:
+          type: string
+        order_limit_amt:
+          type: integer
+        brand_icon_url:
+          type: string
+          format: uri
+        image_url:
+          type: string
+          format: uri
+        image_url_mobile:
+          type: string
+          format: uri
+        offer_logo:
+          type: string
+          format: uri
+        small_brand_icon_url:
+          type: string
+          format: uri
+        name:
+          type: string
+        important_instructions:
+          type: string
+          format: html
+        description:
+          type: string
+          format: html
+        new_arrival:
+          type: integer
+        how_to_redeem_url:
+          type: string
+        how_to_redeem:
+          type: ["string", "null"]
+        redemption_type:
+          type: string
+        btf_content:
+          type: string
+          format: html
+        online_redeem_url:
+          type: string
+          format: uri
+        tnc:
+          type: string
+        entertainment_category:
+          type: ["string", "null"]
+        seo_title:
+          type: string
+        seo_keyword:
+          type: string
+        seo_description:
+          type: string
+        points_to_inr_ratio:
+          type: string
+        inr_to_points_ratio:
+          type: string
+        online_redeem_video_url:
+          type: string
+    Product:
+      type: object
+      required:
+        - id
+        - brand_id
+        - available_qty
+        - price
+        - name
+        - service_charge
+      properties:
+        id:
+          type: integer
+        brand_id:
+          type: integer
+        available_qty:
+          type: integer
+        price:
+          type: integer
+        name:
+          type: string
+        default_promocode:
+          type: ["string", "null"]
+        default_promocode_value:
+          type: ["number", "null"]
+        default_offer_type:
+          type: ["string", "null"]
+        default_offer_display_text:
+          type: ["string", "null"]
+        default_product_qty:
+          type: ["integer", "null"]
+        default_offer_product_qty:
+          type: ["integer", "null"]
+        cashback_offer_value:
+          type: ["number", "null"]
+        cashback_offer_type:
+          type: ["string", "null"]
+        cashback_offer_name:
+          type: ["string", "null"]
+        default_offer_tnc:
+          type: ["string", "null"]
+        service_charge:
+          type: number
+    GetBrandResponse:
+      type: object
+      required:
+        - code
+        - status
+      properties:
+        code:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        data:
+          $ref: "#/components/schemas/BrandDetails"
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+    CartProduct:
+      type: object
+      required:
+        - quantity
+        - id
+        - name
+        - email
+        - mobile
+        - mode
+      properties:
+        quantity:
+          type: integer
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        mobile:
+          type: string
+        sendername:
+          type: string
+        template_id:
+          type: ["integer", "null"]
+        gift_status:
+          type: string
+        gift_text:
+          type: string
+        gift_imgurl:
+          type: string
+        promo:
+          type: string
+        mode:
+          type: string
+    AddToCartRequest:
+      type: object
+      required:
+        - products
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartProduct"
+    AddToCartResponse:
+      type: object
+      required:
+        - code
+        - status
+        - cartItemIds
+      properties:
+        code:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        cartItemIds:
+          type: string
+    CreateOrderRequest:
+      type: object
+      required:
+        - cart_item_ids
+        - email
+        - mobile
+        - name
+      properties:
+        cart_item_ids:
+          type: string
+        email:
+          type: string
+          format: email
+        mobile:
+          type: string
+        mode:
+          type: string
+        name:
+          type: string
+        user_id:
+          type: string
+        utmsource:
+          type: string
+    FormAction:
+      type: object
+      required:
+        - web
+      properties:
+        web:
+          type: string
+          format: uri
+        expiry:
+          type: string
+          format: date-time
+    PaymentFilterOption:
+      type: object
+      required:
+        - enable
+        - paymentMethodType
+      properties:
+        enable:
+          type: boolean
+        paymentMethodType:
+          type: string
+    FormDataPayload:
+      type: object
+      required:
+        - clientId
+        - customerId
+        - orderId
+        - returnUrl
+        - currency
+        - customerEmail
+        - customerPhone
+        - service
+        - description
+        - environment
+        - merchantId
+        - amount
+        - clientAuthTokenExpiry
+        - clientAuthToken
+        - action
+      properties:
+        clientId:
+          type: string
+        customerId:
+          type: string
+        orderId:
+          type: string
+        returnUrl:
+          type: string
+          format: uri
+        currency:
+          type: string
+        customerEmail:
+          type: string
+        customerPhone:
+          type: string
+        service:
+          type: string
+        description:
+          type: string
+        environment:
+          type: string
+        merchantId:
+          type: string
+        amount:
+          type: string
+        clientAuthTokenExpiry:
+          type: string
+          format: date-time
+        clientAuthToken:
+          type: string
+        action:
+          type: string
+        paymentFilter:
+          type: object
+          properties:
+            allowDefaultOptions:
+              type: boolean
+            options:
+              type: array
+              items:
+                $ref: "#/components/schemas/PaymentFilterOption"
+        sdkUdf:
+          type: object
+          properties:
+            EMI:
+              type: string
+        collectAvsInfo:
+          type: boolean
+    FormData:
+      type: object
+      required:
+        - requestId
+        - service
+        - payload
+      properties:
+        requestId:
+          type: string
+        service:
+          type: string
+        payload:
+          $ref: "#/components/schemas/FormDataPayload"
+        expiry:
+          type: string
+          format: date-time
+    CreateOrderResponse:
+      type: object
+      required:
+        - code
+        - status
+        - formAction
+        - formData
+      properties:
+        code:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+        formAction:
+          $ref: "#/components/schemas/FormAction"
+        formData:
+          $ref: "#/components/schemas/FormData"
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: token
+      description: Custom token-based authentication. The token is obtained from the /user/auth-validate endpoint.
