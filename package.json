@@ -12,7 +12,8 @@
     "db:studio": "pnpm exec drizzle-kit studio",
     "inngest": "pnpm dlx inngest-cli@latest dev --poll-interval 60",
     "format": "pnpm exec prettier . --write",
-    "prepare": "husky"
+    "prepare": "husky",
+    "types:generate": "pnpm dlx openapi-typescript src/services/gyftr/schema.yaml -o src/services/gyftr/types.ts"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
