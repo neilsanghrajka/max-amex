@@ -20,7 +20,7 @@ export const amazonLoginEventHandler = createEventHandler<
   typeof AmazonLoginSchema
 >(
   AMAZON_LOGIN_EVENT,
-  "amazon-login",
+  AMAZON_LOGIN_EVENT,
   { limit: 1 }, // Allow only one Amazon login at a time
   3, // Retry count
   AmazonLoginSchema,

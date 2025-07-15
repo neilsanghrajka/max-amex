@@ -152,7 +152,7 @@ export const gyftrLoginRequestedEventHandler = createEventHandler<
   typeof GyftrLoginRequestedSchema
 >(
   GYFTR_LOGIN_REQUESTED_EVENT,
-  "gyftr-login-requested",
+  GYFTR_LOGIN_REQUESTED_EVENT,
   { limit: 5 }, // Allow multiple Gyftr logins in parallel
   3, // Retry count
   GyftrLoginRequestedSchema,

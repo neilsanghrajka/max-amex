@@ -54,7 +54,7 @@ export const otpWaitRequestedEventHandler = createEventHandler<
   typeof OtpWaitRequestedSchema
 >(
   OTP_WAIT_REQUESTED_EVENT,
-  "otp-wait-requested",
+  OTP_WAIT_REQUESTED_EVENT,
   { limit: 10 }, // Allow multiple OTP waits in parallel
   3, // Retry count
   OtpWaitRequestedSchema,

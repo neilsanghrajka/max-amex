@@ -1,6 +1,7 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
 import { GyftrrLoginSchema, GyftrrLoginType } from "./types";
+import { requestOtp } from "@/services/gyftr";
 
 const GYFTRR_LOGIN_EVENT = EventNames.GYFTRR_LOGIN;
 
@@ -9,9 +10,27 @@ const handler: EventHandler<
   typeof GYFTRR_LOGIN_EVENT,
   typeof GyftrrLoginSchema
 > = async (data: GyftrrLoginType, step) => {
-  console.log("Gyftrr login - barebones function executed");
-  console.log(data, step);
-  return { success: true, message: "Gyftrr login function completed" };
+  // Start
+  await step.run("start", async () => {
+    console.log(`Starting Gyftrr Login for ${data.email} ${data.mobile}`);
+  });
+
+  // Request OTP
+  await step.run("request-otp", async () => {
+    const success = await requestOtp(data.mobile, data.email);
+    
+    if (!success) {
+      throw new Error("Failed to request OTP");
+    }
+
+    return { success: true, message: "OTP requested successfully" };
+  });
+
+  // TODO: Wait for OTP
+  // TODO: Return "Auth token"
+
+
+  return { auth_token: "TODO", message: "Gyftrr login function completed" };
 };
 
 // EVENT FUNCTION
@@ -20,7 +39,7 @@ export const gyftrrLoginEventHandler = createEventHandler<
   typeof GyftrrLoginSchema
 >(
   GYFTRR_LOGIN_EVENT,
-  "gyftrr-login",
+  GYFTRR_LOGIN_EVENT,
   { limit: 1 }, // Allow only one Gyftrr login at a time
   3, // Retry count
   GyftrrLoginSchema,

@@ -7,6 +7,10 @@ import { purchaseEventHandler } from "@/inngest/bulk-purchase/purchase";
 
 const BULK_PURCHASE_INITIATE_EVENT = EventNames.BULK_PURCHASE_INITIATE;
 
+// TODO: Remove hardcoded email and mobile
+const EMAIL = "sanghrajka.neil@gmail.com";
+const MOBILE = "8879472388";
+
 // EVENT HANDLER
 const handler: EventHandler<
   typeof BULK_PURCHASE_INITIATE_EVENT,
@@ -20,7 +24,10 @@ const handler: EventHandler<
 
   const gyftrLoginPromise = step.invoke("gyftr-login", {
     function: gyftrrLoginEventHandler,
-    data: {},
+    data: {
+      email: EMAIL,
+      mobile: MOBILE,
+    },
   });
 
   await Promise.all([amazonLoginPromise, gyftrLoginPromise]);
@@ -53,7 +60,7 @@ export const bulkPurchaseInitiatedEventHandler = createEventHandler<
   typeof BulkPurchaseInitiateSchema
 >(
   BULK_PURCHASE_INITIATE_EVENT,
-  "bulk-purchase-initiate",
+  BULK_PURCHASE_INITIATE_EVENT,
   { limit: 1, key: "event.data.jobId" },
   1,
   BulkPurchaseInitiateSchema,

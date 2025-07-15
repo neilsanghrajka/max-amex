@@ -94,7 +94,7 @@ const handler: EventHandler<
 
 export const userSignedUpEventHandler = createEventHandler(
   USER_SIGNED_UP_EVENT,
-  "user-signed-up-handler",
+  USER_SIGNED_UP_EVENT,
   { limit: 5 },
   3,
   UserSignedUpSchema,
