@@ -1,4 +1,7 @@
-import { BulkPurchaseInitiateSchema, PurchaseSchema } from "@/inngest/bulk-purchase/types";
+import {
+  BulkPurchaseInitiateSchema,
+  PurchaseSchema,
+} from "@/inngest/bulk-purchase/types";
 import {
   OtpReceivedSchema,
   OtpWaitRequestedSchema,

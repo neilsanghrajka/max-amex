@@ -28,11 +28,4 @@ const handler: EventHandler<
 export const purchaseEventHandler = createEventHandler<
   typeof PURCHASE_EVENT,
   typeof PurchaseSchema
->(
-  PURCHASE_EVENT,
-  "purchase",
-  { limit: 1 },
-  3,
-  PurchaseSchema,
-  handler,
-); 
+>(PURCHASE_EVENT, "purchase", { limit: 1 }, 3, PurchaseSchema, handler);

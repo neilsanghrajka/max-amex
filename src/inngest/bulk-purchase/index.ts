@@ -12,7 +12,7 @@ const handler: EventHandler<
   typeof BULK_PURCHASE_INITIATE_EVENT,
   typeof BulkPurchaseInitiateSchema
 > = async (data, step) => {
-   // Invoke Amazon and Gyftr login functions in parallel
+  // Invoke Amazon and Gyftr login functions in parallel
   const amazonLoginPromise = step.invoke("amazon-login", {
     function: amazonLoginEventHandler,
     data: {},
@@ -24,7 +24,7 @@ const handler: EventHandler<
   });
 
   await Promise.all([amazonLoginPromise, gyftrLoginPromise]);
- 
+
   // PURCHASE
   // ----------------------------------------
   const PURCHASE_COUNT = 4;
@@ -40,7 +40,11 @@ const handler: EventHandler<
     });
   }
 
-  return { message: "Bulk purchase completed", jobId: data.jobId, purchaseCount: PURCHASE_COUNT };
+  return {
+    message: "Bulk purchase completed",
+    jobId: data.jobId,
+    purchaseCount: PURCHASE_COUNT,
+  };
 };
 
 // EVENT FUNCTION
