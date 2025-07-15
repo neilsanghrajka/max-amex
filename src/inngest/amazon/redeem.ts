@@ -9,9 +9,25 @@ const handler: EventHandler<
   typeof AMAZON_REDEEM_EVENT,
   typeof AmazonRedeemSchema
 > = async (data: AmazonRedeemType, step) => {
-  console.log("Amazon redeem - barebones function executed");
-  console.log(data, step);
-  return { success: true, message: "Amazon redeem function completed" };
+  await step.run("log-start", async () => {
+    console.log(`Amazon redeem for job ${data.jobId}, ordinal ${data.ordinal}, voucher: ${data.voucherCode}`);
+    return { logged: true };
+  });
+
+  await step.sleep("amazon-redeem-processing", "3s");
+
+  await step.run("log-completion", async () => {
+    console.log(`Amazon redeem completed for voucher ${data.voucherCode}`);
+    return { logged: true };
+  });
+
+  return { 
+    success: true, 
+    message: "Amazon redeem function completed",
+    jobId: data.jobId,
+    ordinal: data.ordinal,
+    voucherCode: data.voucherCode
+  };
 };
 
 // EVENT FUNCTION
