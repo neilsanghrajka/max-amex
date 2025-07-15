@@ -1,6 +1,9 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
-import { AmazonRedeemRequestedSchema, AmazonRedeemRequestedType } from "./types";
+import {
+  AmazonRedeemRequestedSchema,
+  AmazonRedeemRequestedType,
+} from "./types";
 
 const AMAZON_REDEEM_REQUESTED_EVENT = EventNames.AMAZON_REDEEM_REQUESTED;
 
@@ -25,4 +28,4 @@ export const amazonRedeemRequestedEventHandler = createEventHandler<
   3, // Retry count
   AmazonRedeemRequestedSchema,
   handler,
-); 
+);

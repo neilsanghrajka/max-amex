@@ -8,9 +8,9 @@ import {
   GyftrLoginRequestedSchema,
   GyftrLoginCompletedSchema,
 } from "@/inngest/gyftrr-login/types";
-import { 
+import {
   AmazonLoginRequestedSchema,
-  AmazonRedeemRequestedSchema 
+  AmazonRedeemRequestedSchema,
 } from "@/inngest/amazon/types";
 
 export const EventNames = {

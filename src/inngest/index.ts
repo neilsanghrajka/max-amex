@@ -3,9 +3,9 @@
 import { paymentInitiatedEventHandler } from "@/inngest/payment";
 import { gyftrLoginRequestedEventHandler } from "@/inngest/gyftrr-login";
 import { otpWaitRequestedEventHandler } from "@/inngest/otp";
-import { 
+import {
   amazonLoginRequestedEventHandler,
-  amazonRedeemRequestedEventHandler 
+  amazonRedeemRequestedEventHandler,
 } from "@/inngest/amazon";
 import { inngest } from "@/inngest/client";
 

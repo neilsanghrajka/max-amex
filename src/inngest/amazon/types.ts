@@ -10,4 +10,4 @@ export const AmazonRedeemRequestedSchema = z.object({});
 
 export type AmazonRedeemRequestedType = z.infer<
   typeof AmazonRedeemRequestedSchema
->; 
+>;

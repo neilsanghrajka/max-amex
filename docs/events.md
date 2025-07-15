@@ -27,6 +27,7 @@ Create a folder for your feature: `src/inngest/user/`
 Create a `types.ts` file with your Zod schema:
 
 **File: `src/inngest/user/types.ts`**
+
 ```typescript
 import { z } from "zod";
 
@@ -41,6 +42,7 @@ export const UserSignedUpSchema = z.object({
 Add to the central `EventNames` object:
 
 **File: `src/inngest/events.ts`**
+
 ```typescript
 export const EventNames = {
   // ... existing event names
@@ -53,6 +55,7 @@ export const EventNames = {
 Update the client to include your new event's schema:
 
 **File: `src/inngest/client.ts`**
+
 ```typescript
 import { UserSignedUpSchema } from "./user/types";
 
@@ -69,6 +72,7 @@ type Events = {
 Create an `index.ts` file with your business logic:
 
 **File: `src/inngest/user/index.ts`**
+
 ```typescript
 import { createEventHandler, EventHandler } from "../factory";
 import { EventNames } from "../events";
@@ -103,6 +107,7 @@ export const userSignedUpEventHandler = createEventHandler(
 Add your handler to the main aggregator:
 
 **File: `src/inngest/index.ts`**
+
 ```typescript
 import { userSignedUpEventHandler } from "./user";
 
