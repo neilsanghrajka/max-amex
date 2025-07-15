@@ -11,10 +11,12 @@ export type BulkPurchaseInitiateType = z.infer<
   typeof BulkPurchaseInitiateSchema
 >;
 
-export enum STEPS {
-  AMAZON_LOGIN = "amazon-login",
-  GYFTR_LOGIN = "gyft-login",
-}
+export const PurchaseSchema = z.object({
+  jobId: z.number(),
+  ordinal: z.number(),
+});
+
+export type PurchaseType = z.infer<typeof PurchaseSchema>;
 
 export type BulkPurchaseStep = GetStepTools<
   typeof inngest,

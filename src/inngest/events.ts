@@ -1,4 +1,4 @@
-import { BulkPurchaseInitiateSchema } from "@/inngest/bulk-purchase/types";
+import { BulkPurchaseInitiateSchema, PurchaseSchema } from "@/inngest/bulk-purchase/types";
 import {
   OtpReceivedSchema,
   OtpWaitRequestedSchema,
@@ -16,6 +16,7 @@ import {
 
 export const EventNames = {
   BULK_PURCHASE_INITIATE: "bulk-purchase/initiate",
+  PURCHASE: "bulk-purchase/purchase",
   OTP_RECEIVED: "otp/received",
   OTP_WAIT_REQUESTED: "otp/wait.requested",
   OTP_WAIT_COMPLETED: "otp/wait.completed",
@@ -31,6 +32,7 @@ export const EventNames = {
 // ----------------------------------------
 export const AppEventSchemas = {
   [EventNames.BULK_PURCHASE_INITIATE]: BulkPurchaseInitiateSchema,
+  [EventNames.PURCHASE]: PurchaseSchema,
   [EventNames.OTP_RECEIVED]: OtpReceivedSchema,
   [EventNames.OTP_WAIT_REQUESTED]: OtpWaitRequestedSchema,
   [EventNames.OTP_WAIT_COMPLETED]: OtpWaitCompletedSchema,
