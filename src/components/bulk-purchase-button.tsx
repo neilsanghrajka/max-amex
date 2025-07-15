@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 
-export function PaymentButton() {
-  const handlePayment = async () => {
+export function BulkPurchaseButton() {
+  const handleBulkPurchase = async () => {
     try {
-      const response = await fetch("/api/payment", {
+      const response = await fetch("/api/bulk-purchase", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -18,22 +18,22 @@ export function PaymentButton() {
       });
 
       const data = await response.json();
-      console.log("Payment Response:", data);
+      console.log("Bulk Purchase Response:", data);
 
       if (response.ok) {
-        alert(`Payment initiated! Job ID: ${data.jobId}`);
+        alert(`Bulk purchase initiated! Job ID: ${data.jobId}`);
       } else {
         alert(`Error: ${data.error}`);
       }
     } catch (error) {
-      console.error("Payment failed:", error);
-      alert("Payment failed. Check console for details.");
+      console.error("Bulk purchase failed:", error);
+      alert("Bulk purchase failed. Check console for details.");
     }
   };
 
   return (
-    <Button onClick={handlePayment} className="ml-4">
-      Test Payment
+    <Button onClick={handleBulkPurchase} className="ml-4">
+      Test Bulk Purchase
     </Button>
   );
-}
+} 

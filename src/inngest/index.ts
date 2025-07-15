@@ -1,6 +1,6 @@
 // Create a client to send and receive events
 
-import { paymentInitiatedEventHandler } from "@/inngest/payment";
+import { bulkPurchaseInitiatedEventHandler } from "@/inngest/bulk-purchase";
 import { gyftrLoginRequestedEventHandler } from "@/inngest/gyftrr-old";
 import { otpWaitRequestedEventHandler } from "@/inngest/otp";
 import {
@@ -14,7 +14,7 @@ import {
 import { inngest } from "@/inngest/client";
 
 export const ALL_HANDLERS = [
-  paymentInitiatedEventHandler,
+  bulkPurchaseInitiatedEventHandler,
   gyftrLoginRequestedEventHandler,
   otpWaitRequestedEventHandler,
   amazonLoginEventHandler,

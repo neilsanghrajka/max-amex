@@ -1,0 +1,142 @@
+{
+  "id": "0fb686df-f618-476b-81c8-6c4d964eab3d",
+  "prevId": "c0683dba-f88e-44d5-b3e2-cd1394826e3b",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.bulk_purchase_job": {
+      "name": "bulk_purchase_job",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "bulk_purchase_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "[object Object]_amount_check": {
+          "name": "[object Object]_amount_check",
+          "value": "\"bulk_purchase_job\".\"amount\" IN (1000, 1500)"
+        },
+        "[object Object]_quantity_check": {
+          "name": "[object Object]_quantity_check",
+          "value": "\"bulk_purchase_job\".\"quantity\" > 0 AND \"bulk_purchase_job\".\"quantity\" <= 10"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sms_webhooks": {
+      "name": "sms_webhooks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "sms_webhooks_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "raw": {
+          "name": "raw",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sender_phone": {
+          "name": "sender_phone",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.bulk_purchase_status": {
+      "name": "bulk_purchase_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "processing",
+        "completed",
+        "failed"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

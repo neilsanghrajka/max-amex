@@ -1,2 +1,2 @@
 export * from "./smsWebhooks";
-export * from "./paymentJob";
+export * from "./bulkPurchaseJob";

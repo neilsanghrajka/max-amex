@@ -1,4 +1,4 @@
-import { PaymentInitiateSchema } from "@/inngest/payment/types";
+import { BulkPurchaseInitiateSchema } from "@/inngest/bulk-purchase/types";
 import {
   OtpReceivedSchema,
   OtpWaitRequestedSchema,
@@ -15,7 +15,7 @@ import {
 } from "@/inngest/gyftrr/types";
 
 export const EventNames = {
-  PAYMENT_INITIATE: "payment/initiate",
+  BULK_PURCHASE_INITIATE: "bulk-purchase/initiate",
   OTP_RECEIVED: "otp/received",
   OTP_WAIT_REQUESTED: "otp/wait.requested",
   OTP_WAIT_COMPLETED: "otp/wait.completed",
@@ -30,7 +30,7 @@ export const EventNames = {
 // Event Schema Definitions
 // ----------------------------------------
 export const AppEventSchemas = {
-  [EventNames.PAYMENT_INITIATE]: PaymentInitiateSchema,
+  [EventNames.BULK_PURCHASE_INITIATE]: BulkPurchaseInitiateSchema,
   [EventNames.OTP_RECEIVED]: OtpReceivedSchema,
   [EventNames.OTP_WAIT_REQUESTED]: OtpWaitRequestedSchema,
   [EventNames.OTP_WAIT_COMPLETED]: OtpWaitCompletedSchema,

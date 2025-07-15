@@ -15,6 +15,13 @@
       "when": 1752240467561,
       "tag": "0001_conscious_richard_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752572958256,
+      "tag": "0002_acoustic_iron_lad",
+      "breakpoints": true
     }
   ]
 }

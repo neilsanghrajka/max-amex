@@ -1,20 +1,20 @@
 import { db } from "@/db";
-import { paymentJobTable } from "@/db/schema/";
+import { bulkPurchaseJobTable } from "@/db/schema/";
 import { eq } from "drizzle-orm";
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
-import { PaymentInitiateSchema } from "@/inngest/payment/types";
+import { BulkPurchaseInitiateSchema } from "@/inngest/bulk-purchase/types";
 
-const PAYMENT_INITIATE_EVENT = EventNames.PAYMENT_INITIATE;
+const BULK_PURCHASE_INITIATE_EVENT = EventNames.BULK_PURCHASE_INITIATE;
 
 // EVENT HANDLER
 const handler: EventHandler<
-  typeof PAYMENT_INITIATE_EVENT,
-  typeof PaymentInitiateSchema
+  typeof BULK_PURCHASE_INITIATE_EVENT,
+  typeof BulkPurchaseInitiateSchema
 > = async (data, step) => {
   const job = await step.run("get-job", async () => {
-    const j = await db.query.paymentJobTable.findFirst({
-      where: eq(paymentJobTable.id, data.jobId),
+    const j = await db.query.bulkPurchaseJobTable.findFirst({
+      where: eq(bulkPurchaseJobTable.id, data.jobId),
     });
     return j;
   });
@@ -33,23 +33,23 @@ const handler: EventHandler<
 
   await step.run("update-job-status", async () => {
     await db
-      .update(paymentJobTable)
+      .update(bulkPurchaseJobTable)
       .set({ status: "completed" })
-      .where(eq(paymentJobTable.id, data.jobId));
+      .where(eq(bulkPurchaseJobTable.id, data.jobId));
   });
 
   return { message: `Processed job ${job.id}!` };
 };
 
 // EVENT FUNCTION
-export const paymentInitiatedEventHandler = createEventHandler<
-  typeof PAYMENT_INITIATE_EVENT,
-  typeof PaymentInitiateSchema
+export const bulkPurchaseInitiatedEventHandler = createEventHandler<
+  typeof BULK_PURCHASE_INITIATE_EVENT,
+  typeof BulkPurchaseInitiateSchema
 >(
-  PAYMENT_INITIATE_EVENT,
-  "payment-initiate",
+  BULK_PURCHASE_INITIATE_EVENT,
+  "bulk-purchase-initiate",
   { limit: 1, key: "event.data.jobId" },
   1,
-  PaymentInitiateSchema,
+  BulkPurchaseInitiateSchema,
   handler,
-);
+); 

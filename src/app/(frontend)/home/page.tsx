@@ -1,5 +1,5 @@
 import { LogoutButton } from "@/components/logout-button";
-import { PaymentButton } from "@/components/payment-button";
+import { BulkPurchaseButton } from "@/components/bulk-purchase-button";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function HomePage() {
@@ -12,7 +12,7 @@ export default async function HomePage() {
         Hello <span>{data?.claims?.email}</span>
       </p>
       <LogoutButton />
-      <PaymentButton />
+              <BulkPurchaseButton />
     </div>
   );
 }
