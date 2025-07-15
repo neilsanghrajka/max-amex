@@ -53,7 +53,7 @@ export interface SimpleProduct {
  */
 export async function requestOtp(
   mobileNumber: string,
-  email: string
+  email: string,
 ): Promise<boolean> {
   console.log("Requesting OTP for Gyftr authentication");
 
@@ -90,7 +90,7 @@ export async function requestOtp(
 export async function validateOtp(
   mobileNumber: string,
   email: string,
-  otp: string
+  otp: string,
 ): Promise<string | null> {
   console.log("Validating OTP for Gyftr authentication");
 
@@ -126,7 +126,7 @@ export async function validateOtp(
  * Get available vouchers for a brand
  */
 export async function getAvailableVouchers(
-  brand: string = "amazon-gift-vouchers"
+  brand: string = "amazon-gift-vouchers",
 ): Promise<SimpleProduct[]> {
   console.log(`Getting available vouchers for ${brand}`);
 
@@ -162,7 +162,7 @@ function createCartProduct(
   productId: number,
   quantity: number,
   email: string,
-  mobileNumber: string
+  mobileNumber: string,
 ): CartProduct {
   return {
     id: productId,
@@ -187,7 +187,7 @@ export function constructCart(
   availableProducts: SimpleProduct[],
   totalAmount: number,
   email: string,
-  mobileNumber: string
+  mobileNumber: string,
 ): CartProduct[] {
   if (!SUPPORTED_AMOUNTS.has(totalAmount)) {
     throw new Error("Total amount must be 1000 or 1500");
@@ -213,8 +213,8 @@ export function constructCart(
         voucherInventory[spec.amount].id,
         spec.quantity,
         email,
-        mobileNumber
-      )
+        mobileNumber,
+      ),
     );
   } else if (totalAmount === 1500) {
     const specs = findVoucherCombinationFor1500(voucherInventory);
@@ -224,8 +224,8 @@ export function constructCart(
           voucherInventory[spec.amount].id,
           spec.quantity,
           email,
-          mobileNumber
-        )
+          mobileNumber,
+        ),
       );
     }
   }
@@ -238,7 +238,7 @@ export function constructCart(
  */
 export async function addToCart(
   authToken: string,
-  cartProducts: CartProduct[]
+  cartProducts: CartProduct[],
 ): Promise<string | null> {
   console.log("Adding products to cart");
 
@@ -278,7 +278,7 @@ export async function createPaymentLink(
   authToken: string,
   cartItemIds: string,
   email: string,
-  mobileNumber: string
+  mobileNumber: string,
 ): Promise<string | null> {
   console.log("Creating payment link");
 
@@ -326,7 +326,7 @@ export async function purchaseVouchers(
   totalAmount: number,
   email: string,
   mobileNumber: string,
-  brand: string = "amazon-gift-vouchers"
+  brand: string = "amazon-gift-vouchers",
 ): Promise<string | null> {
   // Validate inputs
   if (!SUPPORTED_BRANDS.has(brand)) {
@@ -344,7 +344,12 @@ export async function purchaseVouchers(
   }
 
   // Construct cart
-  const cart = constructCart(availableVouchers, totalAmount, email, mobileNumber);
+  const cart = constructCart(
+    availableVouchers,
+    totalAmount,
+    email,
+    mobileNumber,
+  );
   if (cart.length === 0) {
     throw new Error("Failed to construct cart");
   }
@@ -360,11 +365,11 @@ export async function purchaseVouchers(
     authToken,
     cartItemIds,
     email,
-    mobileNumber
+    mobileNumber,
   );
   if (!paymentLink) {
     throw new Error("Failed to create payment link");
   }
 
   return paymentLink;
-} 
+}

@@ -10,7 +10,7 @@ const handler: EventHandler<
   typeof AmazonLoginRequestedSchema
 > = async (data: AmazonLoginRequestedType, step) => {
   console.log("Amazon login requested - barebones function executed");
-  
+  console.log(data, step);
   return { success: true, message: "Amazon login function completed" };
 };
 
