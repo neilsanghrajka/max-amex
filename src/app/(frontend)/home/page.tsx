@@ -12,7 +12,7 @@ export default async function HomePage() {
         Hello <span>{data?.claims?.email}</span>
       </p>
       <LogoutButton />
-              <BulkPurchaseButton />
+      <BulkPurchaseButton />
     </div>
   );
 }

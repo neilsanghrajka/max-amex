@@ -121,12 +121,7 @@
     "public.bulk_purchase_status": {
       "name": "bulk_purchase_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "processing",
-        "completed",
-        "failed"
-      ]
+      "values": ["pending", "processing", "completed", "failed"]
     }
   },
   "schemas": {},

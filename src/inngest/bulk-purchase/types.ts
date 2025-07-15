@@ -7,7 +7,9 @@ export const BulkPurchaseInitiateSchema = z.object({
   jobId: z.number(),
 });
 
-export type BulkPurchaseInitiateType = z.infer<typeof BulkPurchaseInitiateSchema>;
+export type BulkPurchaseInitiateType = z.infer<
+  typeof BulkPurchaseInitiateSchema
+>;
 
 export enum STEPS {
   AMAZON_LOGIN = "amazon-login",
@@ -17,4 +19,4 @@ export enum STEPS {
 export type BulkPurchaseStep = GetStepTools<
   typeof inngest,
   typeof EventNames.BULK_PURCHASE_INITIATE
->; 
+>;

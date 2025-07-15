@@ -40,4 +40,4 @@ export const bulkPurchaseJobTable = pgTable(
     ),
     // TODO: Add check so one user + card can only have one bulk purchase job at a time that is active
   ],
-); 
+);

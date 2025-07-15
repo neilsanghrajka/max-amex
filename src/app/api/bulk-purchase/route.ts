@@ -34,4 +34,4 @@ export const POST = route(
     // TODO: Return the jobId
     return { jobId: job.id.toString() };
   },
-); 
+);

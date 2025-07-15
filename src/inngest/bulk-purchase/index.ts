@@ -52,4 +52,4 @@ export const bulkPurchaseInitiatedEventHandler = createEventHandler<
   1,
   BulkPurchaseInitiateSchema,
   handler,
-); 
+);

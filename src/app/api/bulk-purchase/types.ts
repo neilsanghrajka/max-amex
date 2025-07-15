@@ -15,7 +15,9 @@ export const InitiateBulkPurchaseRequest = z.object({
   }),
 });
 
-export type InitiateBulkPurchaseRequest = z.infer<typeof InitiateBulkPurchaseRequest>;
+export type InitiateBulkPurchaseRequest = z.infer<
+  typeof InitiateBulkPurchaseRequest
+>;
 
 // Response Schema
 export const InitiateBulkPurchaseResponse = z.object({
@@ -26,8 +28,10 @@ const ErrorResponse = z.object({
   error: z.string(),
 });
 
-export type InitiateBulkPurchaseResponse = z.infer<typeof InitiateBulkPurchaseResponse>;
+export type InitiateBulkPurchaseResponse = z.infer<
+  typeof InitiateBulkPurchaseResponse
+>;
 export type ErrorResponse = z.infer<typeof ErrorResponse>;
 
 // Every endpoint has a request, error response, and success response.
-// Every endpoint needs to validate user. 
+// Every endpoint needs to validate user.
