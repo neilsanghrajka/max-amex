@@ -11,6 +11,19 @@ This document explains the "Hybrid Colocation" architecture for adding and sendi
 
 ---
 
+## Tips for Event Naming
+
+Event names are used to trigger functions. We recommend using a consistent naming convention for your events. This will make it easier to find and trigger functions in the future. Here are some tips for naming events:
+
+- **Object-Action**: Use an Object-Action pattern as represented by noun and a verb. This is great for grouping related events on a given object, `account.created`, `account.updated`, `account.deleted`.
+- **Past-tense**: Use a past-tense verb for the action. For example, `uploaded`, `paid`, `completed`, `sent`.
+- **Separators**: Use dot-notation and/or underscores to separate words. For example, `user.created` or `blog_post.published`.
+- **Prefixes**: Use prefixes to group related events. For example, `api/user.created`, `billing/invoice.paid`, `stripe/customer.created`. This is especially useful if you have multiple applications that send events to Inngest.
+
+There is no right or wrong way to name events. The most important thing is to be consistent and use a naming convention that makes sense for your application.
+
+---
+
 ## Adding a New Event
 
 Here is the step-by-step process for adding a new event (e.g., `user/signed-up`).
