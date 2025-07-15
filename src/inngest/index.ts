@@ -3,7 +3,10 @@
 import { paymentInitiatedEventHandler } from "@/inngest/payment";
 import { gyftrLoginRequestedEventHandler } from "@/inngest/gyftrr-login";
 import { otpWaitRequestedEventHandler } from "@/inngest/otp";
-import { amazonLoginRequestedEventHandler } from "@/inngest/amazon-login";
+import { 
+  amazonLoginRequestedEventHandler,
+  amazonRedeemRequestedEventHandler 
+} from "@/inngest/amazon";
 import { inngest } from "@/inngest/client";
 
 export const ALL_HANDLERS = [
@@ -11,6 +14,7 @@ export const ALL_HANDLERS = [
   gyftrLoginRequestedEventHandler,
   otpWaitRequestedEventHandler,
   amazonLoginRequestedEventHandler,
+  amazonRedeemRequestedEventHandler,
 ];
 
 export { inngest };

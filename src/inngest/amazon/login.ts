@@ -25,4 +25,4 @@ export const amazonLoginRequestedEventHandler = createEventHandler<
   3, // Retry count
   AmazonLoginRequestedSchema,
   handler,
-);
+); 
