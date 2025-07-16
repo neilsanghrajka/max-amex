@@ -1,16 +1,17 @@
 import { db } from "@/db";
 import { smsWebhooks } from "@/db/schema/smsWebhooks";
 import { desc, gte, and, like } from "drizzle-orm";
+import { extractOtpFromMessage as extractOtpWithLLM } from "./otp-classifier";
 
 export enum Portal {
-  GYFTR_AMEX_REWARDS_MULTIPLIER = "GYFTR_AMEX_REWARDS_MULTIPLIER",
-  AMAZON = "AMAZON",
-  JUSPAY = "JUSPAY",
+  AMEX = "amex",
+  AMAZON = "amazon",
+  GYFTR_AMEX_REWARDS_MULTIPLIER = "amex_rewards_multiplier",
 }
 
 export enum OTPType {
-  ACCOUNT_LOGIN = "ACCOUNT_LOGIN",
-  PAYMENT_CONFIRMATION = "PAYMENT_CONFIRMATION",
+  CARD_TRANSACTION = "transaction",
+  ACCOUNT_LOGIN = "login",
 }
 
 export interface OTPResult {
@@ -21,71 +22,7 @@ export interface OTPResult {
   otpType: OTPType;
 }
 
-/**
- * Extract OTP from SMS message based on portal and type
- */
-function extractOtpFromMessage(message: string): string | null {
-  // Common OTP patterns
-  const patterns = [
-    /(\d{6})/g, // 6-digit OTP
-    /(\d{4})/g, // 4-digit OTP
-    /OTP[:\s]*(\d{4,6})/gi, // OTP: followed by digits
-    /code[:\s]*(\d{4,6})/gi, // Code: followed by digits
-  ];
 
-  // Try each pattern
-  for (const pattern of patterns) {
-    const matches = message.match(pattern);
-    if (matches) {
-      // Return the first match that looks like an OTP
-      const potentialOtp = matches[0].replace(/\D/g, "");
-      if (potentialOtp.length >= 4 && potentialOtp.length <= 6) {
-        return potentialOtp;
-      }
-    }
-  }
-
-  return null;
-}
-
-/**
- * Determine portal and OTP type from SMS message content
- */
-function classifyOtpMessage(
-  message: string,
-): { portal: Portal; otpType: OTPType } | null {
-  const lowerMessage = message.toLowerCase();
-
-  // Gyftr patterns
-  if (lowerMessage.includes("gyftr") || lowerMessage.includes("reward")) {
-    return {
-      portal: Portal.GYFTR_AMEX_REWARDS_MULTIPLIER,
-      otpType: OTPType.ACCOUNT_LOGIN,
-    };
-  }
-
-  // Amazon patterns
-  if (lowerMessage.includes("amazon")) {
-    return {
-      portal: Portal.AMAZON,
-      otpType: OTPType.ACCOUNT_LOGIN,
-    };
-  }
-
-  // Juspay/Payment patterns
-  if (lowerMessage.includes("juspay") || lowerMessage.includes("payment")) {
-    return {
-      portal: Portal.JUSPAY,
-      otpType: OTPType.PAYMENT_CONFIRMATION,
-    };
-  }
-
-  // Default to Gyftr login if we can't classify
-  return {
-    portal: Portal.GYFTR_AMEX_REWARDS_MULTIPLIER,
-    otpType: OTPType.ACCOUNT_LOGIN,
-  };
-}
 
 /**
  * Poll the SMS webhooks table for OTP messages
@@ -127,28 +64,24 @@ export async function getOtpFromSms(
 
         if (!message) continue;
 
-        // Classify the message
-        const classification = classifyOtpMessage(message);
-        if (!classification) continue;
+        try {
+          // Extract OTP using LLM with exact portal and type matching
+          const extraction = await extractOtpWithLLM(message, portal, otpType);
 
-        // Check if this matches our target portal and type
-        if (
-          classification.portal === portal &&
-          classification.otpType === otpType
-        ) {
-          // Extract OTP
-          const otp = extractOtpFromMessage(message);
-
-          if (otp) {
-            console.log(`Found OTP: ${otp} from ${portal}`);
+          if (extraction && extraction.otp) {
+            console.log(`Found OTP: ${extraction.otp} from ${portal} (portal: ${extraction.portal}, type: ${extraction.otp_type})`);
             return {
-              otp,
+              otp: extraction.otp,
               message,
               timestamp: smsRecord.createdAt,
               portal,
               otpType,
             };
           }
+        } catch (error) {
+          console.error(`Error extracting OTP from message: ${error}`);
+          // Continue to next message instead of failing entirely
+          continue;
         }
       }
 
