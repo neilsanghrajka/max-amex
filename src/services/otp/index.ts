@@ -4,7 +4,6 @@ import { desc, gte, and, like } from "drizzle-orm";
 import { extractOtpFromMessage } from "./classifier";
 import { Portal, OTPType, OTPResult } from "./types";
 
-
 export async function getOtp(
   senderPhone: string,
   startDateUtc: Date,
@@ -43,11 +42,9 @@ async function getAllMessagesInTimeRange(
     )
     .orderBy(desc(smsWebhooks.createdAt));
 
-
   console.log("Received messages from database: ", response);
   return response;
 }
-
 
 async function findTheCorrectOtp(
   messages: SmsWebhook[],

@@ -4,15 +4,19 @@ import { Portal, OTPType } from "./types";
 import { SmsWebhook } from "@/db/schema/smsWebhooks";
 
 const OTPSchema = z.object({
-  otp: z.string()
-    .min(4)
-    .max(8)
-    .describe("The one-time password code"),
-  portal: z.enum(["amex", "amazon", "amex_rewards_multiplier"])
-    .describe("The portal/service that sent the OTP. Options: amex (American Express), amazon (Amazon), amex_rewards_multiplier (American Express Rewards Multiplier powered by Gyftr)"),
-  otp_type: z.enum(["transaction", "login"])
-    .describe("The type of OTP. Options: transaction (Transaction related OTP like 'Your Amex SafeKey One-Time Password for INR 2.00, at CRED is 269510. Valid for 10 mins for Card ending 11006. Do not disclose it to anyone.'), login (Login related OTP like '632226 is your Amazon OTP. Do not share it with anyone')"),
-  raw_message: z.string()
+  otp: z.string().min(4).max(8).describe("The one-time password code"),
+  portal: z
+    .enum(["amex", "amazon", "amex_rewards_multiplier"])
+    .describe(
+      "The portal/service that sent the OTP. Options: amex (American Express), amazon (Amazon), amex_rewards_multiplier (American Express Rewards Multiplier powered by Gyftr)",
+    ),
+  otp_type: z
+    .enum(["transaction", "login"])
+    .describe(
+      "The type of OTP. Options: transaction (Transaction related OTP like 'Your Amex SafeKey One-Time Password for INR 2.00, at CRED is 269510. Valid for 10 mins for Card ending 11006. Do not disclose it to anyone.'), login (Login related OTP like '632226 is your Amazon OTP. Do not share it with anyone')",
+    ),
+  raw_message: z
+    .string()
     .describe("The raw message that was sent by the portal"),
 });
 
@@ -28,7 +32,6 @@ Rules:
 2. Focus on the most recent message if multiple are provided
 3. Return ONLY the OTP digits, nothing else from the message
 `;
-
 
 /**
  * Build the user prompt with messages and filtering criteria
@@ -51,8 +54,8 @@ function buildUserPrompt(
 
     `;
 
-      if (additionalPrompt) {
-        prompt += `Additionally, we want to filter by:
+  if (additionalPrompt) {
+    prompt += `Additionally, we want to filter by:
     <prompt>
     ${additionalPrompt}
     </prompt>
@@ -61,7 +64,6 @@ function buildUserPrompt(
 
   return prompt;
 }
-
 
 export async function extractOtpFromMessage(
   messages: SmsWebhook[],
