@@ -6,7 +6,7 @@ import { Portal, OTPType, OTPResult } from "./types";
 
 export async function getOtp(
   senderPhone: string,
-  startDateUtc: Date,
+  startDateUtc: string,
   portal: Portal,
   otpType: OTPType,
 ): Promise<OTPResult | null> {
@@ -29,14 +29,14 @@ export async function getOtp(
  */
 async function getAllMessagesInTimeRange(
   senderPhone: string,
-  startDate: Date,
+  startDate: string,
 ): Promise<SmsWebhook[]> {
   const response = await db
     .select()
     .from(smsWebhooks)
     .where(
       and(
-        gte(smsWebhooks.createdAt, startDate.toISOString()),
+        gte(smsWebhooks.createdAt, startDate),
         like(smsWebhooks.senderPhone, `%${senderPhone}%`),
       ),
     )

@@ -1,13 +1,18 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
-import { AmazonRedeemSchema, AmazonRedeemType } from "./types";
+import {
+  AmazonRedeemSchema,
+  AmazonRedeemType,
+  AmazonRedeemResultSchema,
+} from "./types";
 
 const AMAZON_REDEEM_EVENT = EventNames.AMAZON_REDEEM;
 
 // EVENT HANDLER
 const handler: EventHandler<
   typeof AMAZON_REDEEM_EVENT,
-  typeof AmazonRedeemSchema
+  typeof AmazonRedeemSchema,
+  typeof AmazonRedeemResultSchema
 > = async (data: AmazonRedeemType, step) => {
   await step.run("log-start", async () => {
     console.log(
@@ -25,7 +30,6 @@ const handler: EventHandler<
 
   return {
     success: true,
-    message: "Amazon redeem function completed",
     jobId: data.jobId,
     ordinal: data.ordinal,
     voucherCode: data.voucherCode,
@@ -35,7 +39,8 @@ const handler: EventHandler<
 // EVENT FUNCTION
 export const amazonRedeemEventHandler = createEventHandler<
   typeof AMAZON_REDEEM_EVENT,
-  typeof AmazonRedeemSchema
+  typeof AmazonRedeemSchema,
+  typeof AmazonRedeemResultSchema
 >(
   AMAZON_REDEEM_EVENT,
   AMAZON_REDEEM_EVENT,
@@ -43,4 +48,5 @@ export const amazonRedeemEventHandler = createEventHandler<
   3, // Retry count
   AmazonRedeemSchema,
   handler,
+  AmazonRedeemResultSchema,
 );

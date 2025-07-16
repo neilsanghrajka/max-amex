@@ -3,6 +3,7 @@ import { EventNames } from "@/inngest/events";
 import {
   GyftrrPurchaseVoucherSchema,
   GyftrrPurchaseVoucherType,
+  GyftrrPurchaseVoucherResultSchema,
 } from "./types";
 
 const GYFTRR_PURCHASE_VOUCHER_EVENT = EventNames.GYFTRR_PURCHASE_VOUCHER;
@@ -10,7 +11,8 @@ const GYFTRR_PURCHASE_VOUCHER_EVENT = EventNames.GYFTRR_PURCHASE_VOUCHER;
 // EVENT HANDLER
 const handler: EventHandler<
   typeof GYFTRR_PURCHASE_VOUCHER_EVENT,
-  typeof GyftrrPurchaseVoucherSchema
+  typeof GyftrrPurchaseVoucherSchema,
+  typeof GyftrrPurchaseVoucherResultSchema
 > = async (data: GyftrrPurchaseVoucherType, step) => {
   await step.run("log-start", async () => {
     console.log(
@@ -30,7 +32,6 @@ const handler: EventHandler<
 
   return {
     success: true,
-    message: "Gyftrr purchase voucher function completed",
     jobId: data.jobId,
     ordinal: data.ordinal,
   };
@@ -39,7 +40,8 @@ const handler: EventHandler<
 // EVENT FUNCTION
 export const gyftrrPurchaseVoucherEventHandler = createEventHandler<
   typeof GYFTRR_PURCHASE_VOUCHER_EVENT,
-  typeof GyftrrPurchaseVoucherSchema
+  typeof GyftrrPurchaseVoucherSchema,
+  typeof GyftrrPurchaseVoucherResultSchema
 >(
   GYFTRR_PURCHASE_VOUCHER_EVENT,
   GYFTRR_PURCHASE_VOUCHER_EVENT,
@@ -47,4 +49,5 @@ export const gyftrrPurchaseVoucherEventHandler = createEventHandler<
   3, // Retry count
   GyftrrPurchaseVoucherSchema,
   handler,
+  GyftrrPurchaseVoucherResultSchema,
 );

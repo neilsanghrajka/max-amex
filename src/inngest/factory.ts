@@ -32,7 +32,8 @@ type RetryCount =
 export const createEventHandler = <
   E extends keyof GetEvents<typeof inngest>,
   S extends z.ZodTypeAny,
-  Result = unknown,
+  R extends z.ZodTypeAny,
+  Result = z.infer<R>,
   FnInput extends GetFunctionInput<typeof inngest, E> = GetFunctionInput<
     typeof inngest,
     E
@@ -45,6 +46,7 @@ export const createEventHandler = <
   retryCount: RetryCount,
   schema: S,
   handler: (data: DataType, step: FnInput["step"]) => Promise<Result>,
+  outputSchema: R,
 ) => {
   return inngest.createFunction(
     {
@@ -56,8 +58,16 @@ export const createEventHandler = <
     async ({ event, step }: FnInput) => {
       console.log("Received job", event.data);
 
+      // Validate the incoming payload.
       const data = schema.parse(event.data) as DataType;
-      return handler(data, step);
+
+      // Run the user handler.
+      const result = await handler(data, step);
+
+      // Validate outgoing payload
+      const parsedResult = outputSchema.parse(result);
+
+      return parsedResult;
     },
   );
 };
@@ -65,8 +75,8 @@ export const createEventHandler = <
 export type EventHandler<
   E extends keyof GetEvents<typeof inngest>,
   S extends z.ZodTypeAny,
-  Result = unknown,
+  R extends z.ZodTypeAny,
 > = (
   data: z.infer<S>,
   step: GetFunctionInput<typeof inngest, E>["step"],
-) => Promise<Result>;
+) => Promise<z.infer<R>>;

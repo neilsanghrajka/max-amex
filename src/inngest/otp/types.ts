@@ -1,27 +1,31 @@
+import { OTPType, Portal } from "@/services/otp/types";
 import { z } from "zod";
+import { EventNames } from "../events";
+import { GetStepTools } from "inngest";
+import { inngest } from "../client";
 
 export const OtpReceivedSchema = z.object({
   jobId: z.number(),
   otp: z.string(),
 });
 
-export type OtpReceivedType = z.infer<typeof OtpReceivedSchema>;
+// Schema that matches the OTPResult interface returned by the OTP service.
+export const OtpResultSchema = z.object({
+  otp: z.string(),
+  message: z.string(),
+  timestamp: z.string(),
+  portal: z.enum(Object.values(Portal)),
+  otpType: z.enum(Object.values(OTPType)),
+});
+
+export type OtpResultType = z.infer<typeof OtpResultSchema>;
 
 export const GetOtpSchema = z.object({
   senderPhone: z.string(),
-  portal: z.enum(["GYFTR_AMEX_REWARDS_MULTIPLIER", "AMAZON", "JUSPAY"]),
-  otpType: z.enum(["ACCOUNT_LOGIN", "PAYMENT_CONFIRMATION"]),
-  startTime: z.string(), // ISO date string // TODO: Look into this
+  portal: z.enum(Object.values(Portal)),
+  otpType: z.enum(Object.values(OTPType)),
+  startTime: z.string(),
 });
 
-export type GetOtpType = z.infer<typeof GetOtpSchema>;
-
-export const OtpWaitCompletedSchema = z.object({
-  jobId: z.number(),
-  success: z.boolean(),
-  otp: z.string().optional(),
-  message: z.string().optional(),
-  error: z.string().optional(),
-});
-
-export type OtpWaitCompletedType = z.infer<typeof OtpWaitCompletedSchema>;
+export type GetOtpRequest = z.infer<typeof GetOtpSchema>;
+export type OtpStep = GetStepTools<typeof inngest, typeof EventNames.OTP_GET>;

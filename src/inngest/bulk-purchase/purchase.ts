@@ -1,6 +1,9 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
-import { PurchaseSchema } from "@/inngest/bulk-purchase/types";
+import {
+  PurchaseSchema,
+  PurchaseResultSchema,
+} from "@/inngest/bulk-purchase/types";
 import { gyftrrPurchaseVoucherEventHandler } from "@/inngest/gyftrr/purchase-voucher";
 import { amazonRedeemEventHandler } from "@/inngest/amazon/redeem";
 
@@ -9,7 +12,8 @@ const PURCHASE_EVENT = EventNames.PURCHASE;
 // EVENT HANDLER
 const handler: EventHandler<
   typeof PURCHASE_EVENT,
-  typeof PurchaseSchema
+  typeof PurchaseSchema,
+  typeof PurchaseResultSchema
 > = async (data, step) => {
   await step.run("log-start", async () => {
     console.log(`Purchase ${data.ordinal} for job ${data.jobId}`);
@@ -76,5 +80,14 @@ const handler: EventHandler<
 // EVENT FUNCTION
 export const purchaseEventHandler = createEventHandler<
   typeof PURCHASE_EVENT,
-  typeof PurchaseSchema
->(PURCHASE_EVENT, PURCHASE_EVENT, { limit: 1 }, 3, PurchaseSchema, handler);
+  typeof PurchaseSchema,
+  typeof PurchaseResultSchema
+>(
+  PURCHASE_EVENT,
+  PURCHASE_EVENT,
+  { limit: 1 },
+  3,
+  PurchaseSchema,
+  handler,
+  PurchaseResultSchema,
+);
