@@ -10,7 +10,7 @@ const handler: EventHandler<typeof GET_OTP_EVENT, typeof GetOtpSchema> = async (
   step,
 ) => {
   // TODO: Implement with exponential backoff and retries.
-  console.log(data, step)
+  console.log(data, step);
 };
 
 // EVENT FUNCTION
