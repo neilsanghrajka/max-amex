@@ -3,9 +3,9 @@ export class LLMError extends Error {
     message: string,
     public provider: string,
     public code?: string,
-    public cause?: Error
+    public cause?: Error,
   ) {
     super(message);
-    this.name = 'LLMError';
+    this.name = "LLMError";
   }
-} 
+}

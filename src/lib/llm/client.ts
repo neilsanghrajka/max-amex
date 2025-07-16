@@ -15,7 +15,7 @@ export async function generateStructuredOutput<T>(
   systemPrompt: string,
   userPrompt: string,
   schema: z.ZodSchema<T>,
-  schemaName: string = "output"
+  schemaName: string = "output",
 ): Promise<T> {
   try {
     const response = await client.responses.parse({
@@ -38,7 +38,7 @@ export async function generateStructuredOutput<T>(
   } catch (error) {
     throw new LLMError(
       `Failed to generate structured output: ${error instanceof Error ? error.message : String(error)}`,
-      "gemini"
+      "gemini",
     );
   }
 }
@@ -46,7 +46,10 @@ export async function generateStructuredOutput<T>(
 /**
  * Generate plain text output
  */
-export async function generateText(systemPrompt: string, userPrompt: string): Promise<string> {
+export async function generateText(
+  systemPrompt: string,
+  userPrompt: string,
+): Promise<string> {
   try {
     const response = await client.chat.completions.create({
       model: "gemini-2.5-flash",
@@ -67,7 +70,7 @@ export async function generateText(systemPrompt: string, userPrompt: string): Pr
   } catch (error) {
     throw new LLMError(
       `Failed to generate text: ${error instanceof Error ? error.message : String(error)}`,
-      "gemini"
+      "gemini",
     );
   }
-} 
+}

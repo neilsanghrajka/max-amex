@@ -22,8 +22,6 @@ export interface OTPResult {
   otpType: OTPType;
 }
 
-
-
 /**
  * Poll the SMS webhooks table for OTP messages
  */
@@ -69,7 +67,9 @@ export async function getOtpFromSms(
           const extraction = await extractOtpWithLLM(message, portal, otpType);
 
           if (extraction && extraction.otp) {
-            console.log(`Found OTP: ${extraction.otp} from ${portal} (portal: ${extraction.portal}, type: ${extraction.otp_type})`);
+            console.log(
+              `Found OTP: ${extraction.otp} from ${portal} (portal: ${extraction.portal}, type: ${extraction.otp_type})`,
+            );
             return {
               otp: extraction.otp,
               message,

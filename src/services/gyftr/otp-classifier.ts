@@ -1,11 +1,11 @@
-import { z } from 'zod';
-import { generateStructuredOutput } from '@/lib/llm/client';
-import { Portal, OTPType } from './otp';
+import { z } from "zod";
+import { generateStructuredOutput } from "@/lib/llm/client";
+import { Portal, OTPType } from "./otp";
 
 const OTPSchema = z.object({
   otp: z.string().min(4).max(8),
-  portal: z.enum(['amex', 'amazon', 'amex_rewards_multiplier']),
-  otp_type: z.enum(['transaction', 'login']),
+  portal: z.enum(["amex", "amazon", "amex_rewards_multiplier"]),
+  otp_type: z.enum(["transaction", "login"]),
   raw_message: z.string(),
 });
 
@@ -23,13 +23,13 @@ Rules:
 }
 
 /**
- * Build the user prompt with message and filtering criteria 
+ * Build the user prompt with message and filtering criteria
  */
 function buildUserPrompt(
   message: string,
   portal: Portal,
   otpType: OTPType,
-  additionalPrompt?: string
+  additionalPrompt?: string,
 ): string {
   let prompt = `Here are the messages:
 <messages>
@@ -61,17 +61,22 @@ export async function extractOtpFromMessage(
   message: string,
   portal: Portal,
   otpType: OTPType,
-  additionalPrompt?: string
+  additionalPrompt?: string,
 ): Promise<OTPExtraction | null> {
   const systemPrompt = buildSystemPrompt();
-  const userPrompt = buildUserPrompt(message, portal, otpType, additionalPrompt);
+  const userPrompt = buildUserPrompt(
+    message,
+    portal,
+    otpType,
+    additionalPrompt,
+  );
 
   try {
     const result = await generateStructuredOutput(
       systemPrompt,
       userPrompt,
       OTPSchema,
-      "otp_extraction"
+      "otp_extraction",
     );
 
     // Validate that the extracted portal and type match what we're looking for
@@ -96,23 +101,28 @@ export async function classifyOtpMessage(message: string): Promise<{
 }> {
   // For backward compatibility, we'll try to extract with default assumptions
   // This is a simplified version that tries common patterns
-  
+
   // Try GYFTR first (most common)
   try {
     const result = await extractOtpFromMessage(
       message,
       Portal.GYFTR_AMEX_REWARDS_MULTIPLIER,
-      OTPType.ACCOUNT_LOGIN
+      OTPType.ACCOUNT_LOGIN,
     );
     if (result) {
       return {
-        portal: Portal[result.portal.toUpperCase() as keyof typeof Portal] || Portal.GYFTR_AMEX_REWARDS_MULTIPLIER,
-        otpType: result.otp_type === 'transaction' ? OTPType.CARD_TRANSACTION : OTPType.ACCOUNT_LOGIN,
+        portal:
+          Portal[result.portal.toUpperCase() as keyof typeof Portal] ||
+          Portal.GYFTR_AMEX_REWARDS_MULTIPLIER,
+        otpType:
+          result.otp_type === "transaction"
+            ? OTPType.CARD_TRANSACTION
+            : OTPType.ACCOUNT_LOGIN,
         confidence: 0.8, // Default confidence
       };
     }
   } catch (error) {
-    console.warn('Failed to extract with GYFTR assumption:', error);
+    console.warn("Failed to extract with GYFTR assumption:", error);
   }
 
   // Try Amazon
@@ -120,19 +130,24 @@ export async function classifyOtpMessage(message: string): Promise<{
     const result = await extractOtpFromMessage(
       message,
       Portal.AMAZON,
-      OTPType.ACCOUNT_LOGIN
+      OTPType.ACCOUNT_LOGIN,
     );
     if (result) {
       return {
-        portal: Portal[result.portal.toUpperCase() as keyof typeof Portal] || Portal.AMAZON,
-        otpType: result.otp_type === 'transaction' ? OTPType.CARD_TRANSACTION : OTPType.ACCOUNT_LOGIN,
+        portal:
+          Portal[result.portal.toUpperCase() as keyof typeof Portal] ||
+          Portal.AMAZON,
+        otpType:
+          result.otp_type === "transaction"
+            ? OTPType.CARD_TRANSACTION
+            : OTPType.ACCOUNT_LOGIN,
         confidence: 0.8,
       };
     }
   } catch (error) {
-    console.warn('Failed to extract with Amazon assumption:', error);
+    console.warn("Failed to extract with Amazon assumption:", error);
   }
 
   // Default fallback
-  throw new Error('Could not classify OTP message');
-} 
+  throw new Error("Could not classify OTP message");
+}
