@@ -3,10 +3,7 @@ import {
   PurchaseSchema,
 } from "@/inngest/bulk-purchase/types";
 import { OtpReceivedSchema, GetOtpSchema } from "@/inngest/otp/types";
-import {
-  GyftrLoginRequestedSchema,
-  GyftrLoginCompletedSchema,
-} from "@/inngest/gyftrr-old/types";
+
 import { AmazonLoginSchema, AmazonRedeemSchema } from "@/inngest/amazon/types";
 import {
   GyftrrLoginSchema,
@@ -18,8 +15,6 @@ export const EventNames = {
   PURCHASE: "bulk-purchase/purchase",
   OTP_RECEIVED: "otp/received",
   OTP_GET: "otp/get",
-  GYFTR_LOGIN_REQUESTED: "gyftr/login.requested",
-  GYFTR_LOGIN_COMPLETED: "gyftr/login.completed",
   AMAZON_LOGIN: "amazon/login",
   AMAZON_REDEEM: "amazon/redeem",
   GYFTRR_LOGIN: "gyftrr/login",
@@ -33,8 +28,6 @@ export const AppEventSchemas = {
   [EventNames.PURCHASE]: PurchaseSchema,
   [EventNames.OTP_RECEIVED]: OtpReceivedSchema,
   [EventNames.OTP_GET]: GetOtpSchema,
-  [EventNames.GYFTR_LOGIN_REQUESTED]: GyftrLoginRequestedSchema,
-  [EventNames.GYFTR_LOGIN_COMPLETED]: GyftrLoginCompletedSchema,
   [EventNames.AMAZON_LOGIN]: AmazonLoginSchema,
   [EventNames.AMAZON_REDEEM]: AmazonRedeemSchema,
   [EventNames.GYFTRR_LOGIN]: GyftrrLoginSchema,

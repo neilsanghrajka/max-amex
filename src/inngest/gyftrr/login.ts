@@ -53,8 +53,17 @@ const handler: EventHandler<
     });
   }
 
+  // Get Auth Token
   const authToken = await step.run("Get Auth Token", async () => {
-    return await validateOtp(data.mobile, data.email, otp.otp);
+    const authToken = await validateOtp(data.mobile, data.email, otp.otp);
+
+    if (!authToken) {
+      throw new NonRetriableError("No auth token found", {
+        cause: "No auth token found..",
+      });
+    }
+
+    return authToken;
   });
 
   return { auth_token: authToken };

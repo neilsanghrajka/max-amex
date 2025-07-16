@@ -2,7 +2,6 @@
 
 import { bulkPurchaseInitiatedEventHandler } from "@/inngest/bulk-purchase";
 import { purchaseEventHandler } from "@/inngest/bulk-purchase/purchase";
-import { gyftrLoginRequestedEventHandler } from "@/inngest/gyftrr-old";
 import { getOtpEventHandler } from "@/inngest/otp";
 import {
   amazonLoginEventHandler,
@@ -17,7 +16,6 @@ import { inngest } from "@/inngest/client";
 export const ALL_HANDLERS = [
   bulkPurchaseInitiatedEventHandler,
   purchaseEventHandler,
-  gyftrLoginRequestedEventHandler,
   getOtpEventHandler,
   amazonLoginEventHandler,
   amazonRedeemEventHandler,
