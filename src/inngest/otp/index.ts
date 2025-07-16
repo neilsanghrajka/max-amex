@@ -1,62 +1,27 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
-import { OtpWaitRequestedSchema, OtpWaitRequestedType } from "./types";
-import {
-  getOtpWithExponentialBackoff,
-  Portal,
-  OTPType,
-} from "@/services/gyftr/otp";
+import { GetOtpSchema, GetOtpType } from "./types";
 
-const OTP_WAIT_REQUESTED_EVENT = EventNames.OTP_WAIT_REQUESTED;
+const GET_OTP_EVENT = EventNames.OTP_GET;
 
 // EVENT HANDLER
-const handler: EventHandler<
-  typeof OTP_WAIT_REQUESTED_EVENT,
-  typeof OtpWaitRequestedSchema
-> = async (data: OtpWaitRequestedType, step) => {
-  const { jobId, senderPhone, portal, otpType, startTime, maxRetries } = data;
-
-  console.log(
-    `Starting OTP wait for job ${jobId}, portal: ${portal}, type: ${otpType}`,
-  );
-
-  const otpResult = await step.run("wait-for-otp", async () => {
-    return await getOtpWithExponentialBackoff(
-      senderPhone,
-      new Date(startTime),
-      portal as Portal,
-      otpType as OTPType,
-      maxRetries,
-    );
-  });
-
-  const success = !!otpResult;
-  const result = {
-    jobId,
-    success,
-    otp: otpResult?.otp,
-    message: success ? "OTP received successfully" : "Failed to receive OTP",
-    error: success ? undefined : "OTP timeout or not found",
-  };
-
-  // Send completion event
-  await step.sendEvent("otp-wait-completed", {
-    name: EventNames.OTP_WAIT_COMPLETED,
-    data: result,
-  });
-
-  return result;
+const handler: EventHandler<typeof GET_OTP_EVENT, typeof GetOtpSchema> = async (
+  data: GetOtpType,
+  step,
+) => {
+  // TODO: Implement with exponential backoff and retries.
+  console.log(data, step)
 };
 
 // EVENT FUNCTION
-export const otpWaitRequestedEventHandler = createEventHandler<
-  typeof OTP_WAIT_REQUESTED_EVENT,
-  typeof OtpWaitRequestedSchema
+export const getOtpEventHandler = createEventHandler<
+  typeof GET_OTP_EVENT,
+  typeof GetOtpSchema
 >(
-  OTP_WAIT_REQUESTED_EVENT,
-  OTP_WAIT_REQUESTED_EVENT,
-  { limit: 10 }, // Allow multiple OTP waits in parallel
+  GET_OTP_EVENT,
+  GET_OTP_EVENT,
+  { limit: 10 }, // Allow multiple OTP gets in parallel
   3, // Retry count
-  OtpWaitRequestedSchema,
+  GetOtpSchema,
   handler,
 );

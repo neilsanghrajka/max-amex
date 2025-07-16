@@ -7,16 +7,14 @@ export const OtpReceivedSchema = z.object({
 
 export type OtpReceivedType = z.infer<typeof OtpReceivedSchema>;
 
-export const OtpWaitRequestedSchema = z.object({
-  jobId: z.number(),
+export const GetOtpSchema = z.object({
   senderPhone: z.string(),
   portal: z.enum(["GYFTR_AMEX_REWARDS_MULTIPLIER", "AMAZON", "JUSPAY"]),
   otpType: z.enum(["ACCOUNT_LOGIN", "PAYMENT_CONFIRMATION"]),
-  startTime: z.string(), // ISO date string
-  maxRetries: z.number().optional().default(5),
+  startTime: z.string(), // ISO date string // TODO: Look into this
 });
 
-export type OtpWaitRequestedType = z.infer<typeof OtpWaitRequestedSchema>;
+export type GetOtpType = z.infer<typeof GetOtpSchema>;
 
 export const OtpWaitCompletedSchema = z.object({
   jobId: z.number(),

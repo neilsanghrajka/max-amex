@@ -4,7 +4,7 @@ import {
 } from "@/inngest/bulk-purchase/types";
 import {
   OtpReceivedSchema,
-  OtpWaitRequestedSchema,
+  GetOtpSchema,
   OtpWaitCompletedSchema,
 } from "@/inngest/otp/types";
 import {
@@ -21,7 +21,7 @@ export const EventNames = {
   BULK_PURCHASE_INITIATE: "bulk-purchase/initiate",
   PURCHASE: "bulk-purchase/purchase",
   OTP_RECEIVED: "otp/received",
-  OTP_WAIT_REQUESTED: "otp/wait.requested",
+  OTP_GET: "otp/get",
   OTP_WAIT_COMPLETED: "otp/wait.completed",
   GYFTR_LOGIN_REQUESTED: "gyftr/login.requested",
   GYFTR_LOGIN_COMPLETED: "gyftr/login.completed",
@@ -37,7 +37,7 @@ export const AppEventSchemas = {
   [EventNames.BULK_PURCHASE_INITIATE]: BulkPurchaseInitiateSchema,
   [EventNames.PURCHASE]: PurchaseSchema,
   [EventNames.OTP_RECEIVED]: OtpReceivedSchema,
-  [EventNames.OTP_WAIT_REQUESTED]: OtpWaitRequestedSchema,
+  [EventNames.OTP_GET]: GetOtpSchema,
   [EventNames.OTP_WAIT_COMPLETED]: OtpWaitCompletedSchema,
   [EventNames.GYFTR_LOGIN_REQUESTED]: GyftrLoginRequestedSchema,
   [EventNames.GYFTR_LOGIN_COMPLETED]: GyftrLoginCompletedSchema,
