@@ -1,8 +1,8 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
 import { GyftrLoginRequestedSchema, GyftrLoginRequestedType } from "./types";
-import { requestOtp, validateOtp, purchaseVouchers } from "@/services/gyftr";
-import { Portal, OTPType } from "@/services/gyftr/otp";
+import { requestOtp, validateOtp, purchaseVouchers } from "@/services/gyftrr";
+import { Portal, OTPType } from "@/services/otp/types";
 import { OtpWaitCompletedType } from "@/inngest/otp/types";
 
 const GYFTR_LOGIN_REQUESTED_EVENT = EventNames.GYFTR_LOGIN_REQUESTED;

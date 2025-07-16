@@ -1,4 +1,4 @@
-import { pgTable, bigint, timestamp, json, varchar } from "drizzle-orm/pg-core";
+  import { pgTable, bigint, timestamp, json, varchar } from "drizzle-orm/pg-core";
 
 export const smsWebhooks = pgTable("sms_webhooks", {
   // You can use { mode: "bigint" } if numbers are exceeding js number limitations
@@ -13,3 +13,6 @@ export const smsWebhooks = pgTable("sms_webhooks", {
   raw: json(),
   senderPhone: varchar("sender_phone").default(""),
 });
+
+export type SmsWebhook = typeof smsWebhooks.$inferSelect;
+export type InsertSmsWebhook = typeof smsWebhooks.$inferInsert;

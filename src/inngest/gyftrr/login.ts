@@ -1,7 +1,7 @@
 import { createEventHandler, EventHandler } from "@/inngest/factory";
 import { EventNames } from "@/inngest/events";
 import { GyftrrLoginSchema, GyftrrLoginType } from "./types";
-import { requestOtp } from "@/services/gyftr";
+import { requestOtp } from "@/services/gyftrr";
 import { getOtpEventHandler } from "@/inngest/otp";
 
 const GYFTRR_LOGIN_EVENT = EventNames.GYFTRR_LOGIN;
