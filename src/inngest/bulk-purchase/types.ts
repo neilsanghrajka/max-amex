@@ -3,7 +3,7 @@ import { type GetStepTools } from "inngest";
 import { inngest } from "@/inngest/client";
 import { EventNames } from "@/inngest/events";
 import { GyftrrSession, User } from "@/inngest/types";
-import { VoucherBrand } from "@/services/gyftrr/utils";
+import { PaymentLinkErrorType, VoucherBrand } from "@/services/gyftrr/utils";
 
 export const BulkPurchaseInitiateSchema = z.object({
   jobId: z.number(),
@@ -51,7 +51,7 @@ export type BulkPurchaseStep = GetStepTools<
 
 // Initiate Payment Schema
 export const InitiatePaymentSchema = z.object({
-  jobId: z.string(),
+  jobId: z.number(),
   index: z.number(),
   gyftrrSession: GyftrrSession,
   user: User,
@@ -63,8 +63,9 @@ export const InitiatePaymentSchema = z.object({
 
 export const InitiatePaymentResultSchema = z.object({
   success: z.boolean(),
-  paymentLink: z.string(),
-  jobId: z.string(),
+  paymentLink: z.string().optional(),
+  errorType: z.enum(Object.values(PaymentLinkErrorType)).optional(),
+  jobId: z.number(),
   index: z.number(),
 });
 

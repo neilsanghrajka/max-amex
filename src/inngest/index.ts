@@ -12,6 +12,7 @@ import {
   gyftrrPurchaseVoucherEventHandler,
 } from "@/inngest/gyftrr";
 import { inngest } from "@/inngest/client";
+import { initiatePaymentEventHandler } from "./bulk-purchase/initiate-payment";
 
 export const ALL_HANDLERS = [
   bulkPurchaseInitiatedEventHandler,
@@ -21,6 +22,7 @@ export const ALL_HANDLERS = [
   amazonRedeemEventHandler,
   gyftrrLoginEventHandler,
   gyftrrPurchaseVoucherEventHandler,
+  initiatePaymentEventHandler,
 ];
 
 export { inngest };

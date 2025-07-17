@@ -4,6 +4,12 @@ export enum VoucherBrand {
   AMAZON = "amazon-gift-vouchers",
 }
 
+export enum PaymentLinkErrorType {
+  MONTHLY_LIMIT_EXCEEDED = "MONTHLY_LIMIT_EXCEEDED",
+  RATE_LIMITED = "RATE_LIMITED",
+  OTHER = "OTHER",
+}
+
 export const SUPPORTED_AMOUNTS = new Set([1000, 1500]);
 
 export interface VoucherInventory {

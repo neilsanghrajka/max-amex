@@ -1,9 +1,6 @@
 import { components } from "./types";
-import { validateResponse, VoucherBrand } from "./utils";
-import {
-  classifyPaymentLinkError,
-  PaymentLinkErrorType,
-} from "./error-classifier";
+import { validateResponse, VoucherBrand, PaymentLinkErrorType } from "./utils";
+import { classifyPaymentLinkError } from "./error-classifier";
 
 // Type aliases for better readability
 type AuthRequest = components["schemas"]["AuthRequest"];
@@ -198,7 +195,7 @@ export async function createPaymentLink(
   cartItemIds: string,
   email: string,
   mobileNumber: string,
-): Promise<string | null> {
+): Promise<{ paymentLink?: string; errorType?: PaymentLinkErrorType }> {
   console.log("Creating payment link");
 
   const requestBody: CreateOrderRequest = {
@@ -211,46 +208,28 @@ export async function createPaymentLink(
     utmsource: "",
   };
 
-  try {
-    const response = await fetch(`${BASE_URL}/order/create-order`, {
-      method: "POST",
-      headers: {
-        ...DEFAULT_HEADERS,
-        token: authToken,
-      },
-      body: JSON.stringify(requestBody),
-    });
+  const response = await fetch(`${BASE_URL}/order/create-order`, {
+    method: "POST",
+    headers: {
+      ...DEFAULT_HEADERS,
+      token: authToken,
+    },
+    body: JSON.stringify(requestBody),
+  });
 
-    const data: CreateOrderResponse = await response.json();
+  const data: CreateOrderResponse = await response.json();
 
-    if (validateResponse(data, 201)) {
-      const paymentUrl = data.formAction?.web;
-      console.log("Payment link created:", paymentUrl);
-      return paymentUrl;
-    } else {
-      console.error("Failed to create payment link:", data);
+  if (validateResponse(data, 201)) {
+    const paymentUrl = data.formAction?.web;
+    console.log("Payment link created:", paymentUrl);
+    return { paymentLink: paymentUrl };
+  } else {
+    console.error("Failed to create payment link:", data);
 
-      // Classify the error using Gemini
-      const errorResponse = data as ErrorResponse;
-      const { type } = await classifyPaymentLinkError(errorResponse);
+    // Classify the error using Gemini
+    const errorResponse = data as ErrorResponse;
+    const errorType = await classifyPaymentLinkError(errorResponse);
 
-      throw new PaymentLinkError(
-        `Failed to create payment link: ${errorResponse.message}`,
-        type,
-      );
-    }
-  } catch (error) {
-    console.error("Error creating payment link:", error);
-    return null;
-  }
-}
-
-class PaymentLinkError extends Error {
-  constructor(
-    message: string,
-    public type: PaymentLinkErrorType,
-  ) {
-    super(message);
-    this.name = "PaymentLinkError";
+    return { errorType };
   }
 }

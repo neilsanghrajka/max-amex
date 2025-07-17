@@ -10,11 +10,8 @@ import { purchaseEventHandler } from "@/inngest/bulk-purchase/purchase";
 import { initiatePaymentEventHandler } from "@/inngest/bulk-purchase/initiate-payment";
 import { isPurchasePossible } from "@/services/gyftrr";
 import { GyftrrSession, User } from "@/inngest/types";
-import { VoucherBrand } from "@/services/gyftrr/utils";
-import {
-  PaymentLinkError,
-  PaymentLinkErrorType,
-} from "@/services/gyftrr/types";
+import { PaymentLinkErrorType, VoucherBrand } from "@/services/gyftrr/utils";
+import { NonRetriableError } from "inngest";
 
 const BULK_PURCHASE_INITIATE_EVENT = EventNames.BULK_PURCHASE_INITIATE;
 
@@ -88,11 +85,13 @@ const handler: EventHandler<
     return gyftrSession;
   });
 
-  // Step 3: Parallel Payment Initiation (Limit Probe)
-  const paymentPromises = [];
+  // Step 3: Generate Payment Links
+  // -------------------------------------
+  const paymentLinks: string[] = [];
   for (let i = 0; i < PURCHASE_COUNT; i++) {
-    paymentPromises.push(
-      step.invoke(`initiate-payment-${i + 1}`, {
+    const { paymentLink, errorType } = await step.invoke(
+      `Initiate Payment ${i + 1}`,
+      {
         function: initiatePaymentEventHandler,
         data: {
           jobId: data.jobId,
@@ -104,51 +103,40 @@ const handler: EventHandler<
             brand: BRAND,
           },
         },
-      }),
+      },
     );
-  }
 
-  // Manual error handling for payment initiation
-  let paymentResults;
-  try {
-    paymentResults = await Promise.all(paymentPromises);
-  } catch (error) {
-    if (
-      error instanceof PaymentLinkError &&
-      error.type === PaymentLinkErrorType.MONTHLY_LIMIT_EXCEEDED
-    ) {
-      console.log("Monthly limit exceeded:", error.message);
-      return {
-        jobId: data.jobId,
-        status: "failed",
-        message: "User monthly limit exceeded",
-      };
+    if (errorType === PaymentLinkErrorType.MONTHLY_LIMIT_EXCEEDED) {
+      throw new NonRetriableError("Monthly limit exceeded", {
+        cause: errorType,
+      });
+    } else if (errorType || !paymentLink) {
+      throw new NonRetriableError("Failed to generate payment link", {
+        cause: errorType,
+      });
     }
-    throw error; // Re-throw other errors
+
+    paymentLinks.push(paymentLink);
   }
 
-  // Step 4: Parallel Purchases (only if all payment links succeeded)
-  const purchasePromises = [];
+  // Step 4: Sequnetially process the purchases
+  // --------------------------
   for (let i = 0; i < PURCHASE_COUNT; i++) {
-    purchasePromises.push(
-      step.invoke(`purchase-${i + 1}`, {
-        function: purchaseEventHandler,
-        data: {
-          jobId: data.jobId,
-          index: i + 1,
-          paymentLink: paymentResults[i].paymentLink,
-          gyftrrSession,
-          user,
-          details: {
-            totalAmount: TOTAL_AMOUNT,
-            brand: BRAND,
-          },
+    await step.invoke(`purchase-${i + 1}`, {
+      function: purchaseEventHandler,
+      data: {
+        jobId: data.jobId,
+        index: i + 1,
+        paymentLink: paymentLinks[i] ?? "",
+        gyftrrSession,
+        user,
+        details: {
+          totalAmount: TOTAL_AMOUNT,
+          brand: BRAND,
         },
-      }),
-    );
+      },
+    });
   }
-
-  await Promise.all(purchasePromises);
 
   return {
     jobId: data.jobId,

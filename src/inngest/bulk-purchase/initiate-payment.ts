@@ -18,21 +18,25 @@ const handler: EventHandler<
   const { gyftrrSession, user, details } = data;
 
   // Create Payment Link
-  const paymentLink = await step.run("Generate Payment Link", async () => {
-    return await initiatePayment(
-      gyftrrSession.authToken,
-      details.totalAmount,
-      user.email,
-      user.mobileNumber,
-      details.brand,
-    );
-  });
+  const { paymentLink, errorType } = await step.run(
+    "Generate Payment Link",
+    async () => {
+      const { paymentLink, errorType } = await initiatePayment(
+        gyftrrSession.authToken,
+        details.totalAmount,
+        user.email,
+        user.mobileNumber,
+        details.brand,
+      );
 
-  // TODO: Handle the error of limit exceeded.
+      return { paymentLink, errorType };
+    },
+  );
 
   return {
-    success: true,
+    success: Boolean(paymentLink),
     paymentLink,
+    errorType,
     jobId: data.jobId,
     index: data.index,
   };

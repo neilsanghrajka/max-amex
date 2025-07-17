@@ -6,7 +6,12 @@ import {
   requestOtp,
   CartProduct,
 } from "./client";
-import { VoucherBrand, SUPPORTED_AMOUNTS, constructCart } from "./utils";
+import {
+  VoucherBrand,
+  SUPPORTED_AMOUNTS,
+  constructCart,
+  PaymentLinkErrorType,
+} from "./utils";
 
 /**
  * Given the total amount and quantity, check if sufficient quanties of vouchers are available.
@@ -88,7 +93,7 @@ export async function initiatePayment(
   email: string,
   mobileNumber: string,
   brand: VoucherBrand,
-): Promise<string> {
+): Promise<{ paymentLink?: string; errorType?: PaymentLinkErrorType }> {
   const { possible, cart, message } = await isPurchasePossible(
     totalAmount,
     1,
@@ -109,17 +114,14 @@ export async function initiatePayment(
 
   // Create payment link
 
-  const paymentLink = await createPaymentLink(
+  const { paymentLink, errorType } = await createPaymentLink(
     authToken,
     cartItemIds,
     email,
     mobileNumber,
   );
-  if (!paymentLink) {
-    throw new Error("Failed to create payment link");
-  }
 
-  return paymentLink;
+  return { paymentLink, errorType };
 }
 
 export { validateOtp, requestOtp };
