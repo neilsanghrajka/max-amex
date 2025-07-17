@@ -1,6 +1,9 @@
 import { components } from "./types";
 import { validateResponse, VoucherBrand } from "./utils";
-import { classifyPaymentLinkError, PaymentLinkErrorType } from "./error-classifier";
+import {
+  classifyPaymentLinkError,
+  PaymentLinkErrorType,
+} from "./error-classifier";
 
 // Type aliases for better readability
 type AuthRequest = components["schemas"]["AuthRequest"];
@@ -231,7 +234,10 @@ export async function createPaymentLink(
       const errorResponse = data as ErrorResponse;
       const { type } = await classifyPaymentLinkError(errorResponse);
 
-      throw new PaymentLinkError(`Failed to create payment link: ${errorResponse.message}`, type);
+      throw new PaymentLinkError(
+        `Failed to create payment link: ${errorResponse.message}`,
+        type,
+      );
     }
   } catch (error) {
     console.error("Error creating payment link:", error);
@@ -239,9 +245,11 @@ export async function createPaymentLink(
   }
 }
 
-
 class PaymentLinkError extends Error {
-  constructor(message: string, public type: PaymentLinkErrorType) {
+  constructor(
+    message: string,
+    public type: PaymentLinkErrorType,
+  ) {
     super(message);
     this.name = "PaymentLinkError";
   }
