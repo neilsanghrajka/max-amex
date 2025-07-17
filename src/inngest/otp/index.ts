@@ -51,8 +51,8 @@ export const getOtpEventHandler = createEventHandler<
     limit: 1,
     key: `event.data.senderPhone + "-" + event.data.portal + "-" + event.data.otpType`,
   }, // Allow one OTP get per phone + portal + type combination
-  10, // Retry count
   GetOtpSchema,
   handler,
   OtpResultSchema,
+  10, // Retry count
 );

@@ -4,453 +4,468 @@
  */
 
 export interface paths {
-  "/user/auth": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/user/auth": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request OTP for Authentication
+         * @description Sends a One-Time Password (OTP) to the user's registered mobile number for authentication.
+         */
+        post: operations["requestOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Request OTP for Authentication
-     * @description Sends a One-Time Password (OTP) to the user's registered mobile number for authentication.
-     */
-    post: operations["requestOtp"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/user/auth-validate": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/user/auth-validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate OTP and Authenticate User
+         * @description Authenticates a user by validating the provided email, mobile number, and OTP. Returns an authentication token upon success.
+         */
+        post: operations["validateOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Validate OTP and Authenticate User
-     * @description Authenticates a user by validating the provided email, mobile number, and OTP. Returns an authentication token upon success.
-     */
-    post: operations["validateOtp"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/brand/{slug}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/brand/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Brand Details
+         * @description Retrieves detailed information about a specific brand and its available products using the brand's slug.
+         */
+        get: operations["getBrandBySlug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Get Brand Details
-     * @description Retrieves detailed information about a specific brand and its available products using the brand's slug.
-     */
-    get: operations["getBrandBySlug"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/cart/add-to-cart": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/cart/add-to-cart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Products to Cart
+         * @description Adds one or more products to the authenticated user's shopping cart.
+         */
+        post: operations["addToCart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Add Products to Cart
-     * @description Adds one or more products to the authenticated user's shopping cart.
-     */
-    post: operations["addToCart"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/order/create-order": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/order/create-order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create an Order
+         * @description Creates an order from the items specified by cart item IDs for the authenticated user.
+         */
+        post: operations["createOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Create an Order
-     * @description Creates an order from the items specified by cart item IDs for the authenticated user.
-     */
-    post: operations["createOrder"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    AuthRequest: {
-      mobileNumber: string;
-      /** Format: email */
-      email: string;
+    schemas: {
+        AuthRequest: {
+            mobileNumber: string;
+            /** Format: email */
+            email: string;
+        };
+        AuthValidateRequest: {
+            mobileNumber: string;
+            /** Format: email */
+            email: string;
+            /** @description 6-digit One-Time Password. */
+            otp: string;
+        };
+        User: {
+            id: number;
+            name?: string;
+            phone: string;
+            /** Format: email */
+            email: string;
+            /** Format: date */
+            dob?: string | null;
+            /** Format: date */
+            anniversary?: string | null;
+            gender?: string | null;
+            webengage_id?: number;
+        };
+        AuthValidateResponse: {
+            code: number;
+            error_status: string;
+            data?: components["schemas"]["User"];
+            /** @description JWT authentication token. */
+            auth_token: string;
+        };
+        ErrorResponse: {
+            code: number;
+            error: string;
+            message: string;
+            status: string;
+        };
+        BrandDetails: {
+            "@brand_id := brands.id"?: number;
+            id: number;
+            service_charge?: number;
+            slug: string;
+            checkout_step?: string;
+            order_limit?: string;
+            order_limit_amt?: number;
+            /** Format: uri */
+            brand_icon_url?: string;
+            /** Format: uri */
+            image_url?: string;
+            /** Format: uri */
+            image_url_mobile?: string;
+            /** Format: uri */
+            offer_logo?: string;
+            /** Format: uri */
+            small_brand_icon_url?: string;
+            name: string;
+            /** Format: html */
+            important_instructions?: string;
+            /** Format: html */
+            description?: string;
+            new_arrival?: number;
+            how_to_redeem_url?: string;
+            how_to_redeem?: string | null;
+            redemption_type?: string;
+            /** Format: html */
+            btf_content?: string;
+            /** Format: uri */
+            online_redeem_url?: string;
+            tnc?: string;
+            entertainment_category?: string | null;
+            seo_title?: string;
+            seo_keyword?: string;
+            seo_description?: string;
+            points_to_inr_ratio?: string;
+            inr_to_points_ratio?: string;
+            online_redeem_video_url?: string;
+        };
+        Product: {
+            id: number;
+            brand_id: number;
+            available_qty: number;
+            price: number;
+            name: string;
+            default_promocode?: string | null;
+            default_promocode_value?: number | null;
+            default_offer_type?: string | null;
+            default_offer_display_text?: string | null;
+            default_product_qty?: number | null;
+            default_offer_product_qty?: number | null;
+            cashback_offer_value?: number | null;
+            cashback_offer_type?: string | null;
+            cashback_offer_name?: string | null;
+            default_offer_tnc?: string | null;
+            service_charge: number;
+        };
+        GetBrandResponse: {
+            code: number;
+            error?: string;
+            message?: string;
+            status: string;
+            data?: components["schemas"]["BrandDetails"];
+            products?: components["schemas"]["Product"][];
+        };
+        CartProduct: {
+            quantity: number;
+            id: number;
+            name: string;
+            /** Format: email */
+            email: string;
+            mobile: string;
+            sendername?: string;
+            template_id?: number | null;
+            gift_status?: string;
+            gift_text?: string;
+            gift_imgurl?: string;
+            promo?: string;
+            mode: string;
+        };
+        AddToCartRequest: {
+            products: components["schemas"]["CartProduct"][];
+        };
+        AddToCartResponse: {
+            code: number;
+            error?: string;
+            message?: string;
+            status: string;
+            cartItemIds: string;
+        };
+        CreateOrderRequest: {
+            cart_item_ids: string;
+            /** Format: email */
+            email: string;
+            mobile: string;
+            mode?: string;
+            name: string;
+            user_id?: string;
+            utmsource?: string;
+        };
+        FormAction: {
+            /** Format: uri */
+            web: string;
+            /** Format: date-time */
+            expiry?: string;
+        };
+        PaymentFilterOption: {
+            enable: boolean;
+            paymentMethodType: string;
+        };
+        FormDataPayload: {
+            clientId: string;
+            customerId: string;
+            orderId: string;
+            /** Format: uri */
+            returnUrl: string;
+            currency: string;
+            customerEmail: string;
+            customerPhone: string;
+            service: string;
+            description: string;
+            environment: string;
+            merchantId: string;
+            amount: string;
+            /** Format: date-time */
+            clientAuthTokenExpiry: string;
+            clientAuthToken: string;
+            action: string;
+            paymentFilter?: {
+                allowDefaultOptions?: boolean;
+                options?: components["schemas"]["PaymentFilterOption"][];
+            };
+            sdkUdf?: {
+                EMI?: string;
+            };
+            collectAvsInfo?: boolean;
+        };
+        FormData: {
+            requestId: string;
+            service: string;
+            payload: components["schemas"]["FormDataPayload"];
+            /** Format: date-time */
+            expiry?: string;
+        };
+        CreateOrderResponse: {
+            code: number;
+            error?: string;
+            message?: string;
+            status: string;
+            formAction: components["schemas"]["FormAction"];
+            formData: components["schemas"]["FormData"];
+        };
     };
-    AuthValidateRequest: {
-      mobileNumber: string;
-      /** Format: email */
-      email: string;
-      /** @description 6-digit One-Time Password. */
-      otp: string;
+    responses: never;
+    parameters: {
+        AcceptHeader: string;
+        AcceptEncodingHeader: string;
+        AcceptLanguageHeader: string;
+        ContentTypeHeader: string;
+        DNTHeader: string;
+        OriginHeader: string;
+        PriorityHeader: string;
+        SecChUaHeader: string;
+        SecChUaMobileHeader: string;
+        SecChUaPlatformHeader: string;
+        SecFetchDestHeader: string;
+        SecFetchModeHeader: string;
+        SecFetchSiteHeader: string;
+        UserAgentHeader: string;
+        /** @description Authentication token for protected endpoints. */
+        TokenHeader: string;
+        /** @description The unique slug identifying the brand. */
+        SlugPath: string;
     };
-    User: {
-      id: number;
-      name?: string;
-      phone: string;
-      /** Format: email */
-      email: string;
-      /** Format: date */
-      dob?: string | null;
-      /** Format: date */
-      anniversary?: string | null;
-      gender?: string | null;
-      webengage_id?: number;
-    };
-    AuthValidateResponse: {
-      code: number;
-      error_status: string;
-      data?: components["schemas"]["User"];
-      /** @description JWT authentication token. */
-      auth_token: string;
-    };
-    BrandDetails: {
-      "@brand_id := brands.id"?: number;
-      id: number;
-      service_charge?: number;
-      slug: string;
-      checkout_step?: string;
-      order_limit?: string;
-      order_limit_amt?: number;
-      /** Format: uri */
-      brand_icon_url?: string;
-      /** Format: uri */
-      image_url?: string;
-      /** Format: uri */
-      image_url_mobile?: string;
-      /** Format: uri */
-      offer_logo?: string;
-      /** Format: uri */
-      small_brand_icon_url?: string;
-      name: string;
-      /** Format: html */
-      important_instructions?: string;
-      /** Format: html */
-      description?: string;
-      new_arrival?: number;
-      how_to_redeem_url?: string;
-      how_to_redeem?: string | null;
-      redemption_type?: string;
-      /** Format: html */
-      btf_content?: string;
-      /** Format: uri */
-      online_redeem_url?: string;
-      tnc?: string;
-      entertainment_category?: string | null;
-      seo_title?: string;
-      seo_keyword?: string;
-      seo_description?: string;
-      points_to_inr_ratio?: string;
-      inr_to_points_ratio?: string;
-      online_redeem_video_url?: string;
-    };
-    Product: {
-      id: number;
-      brand_id: number;
-      available_qty: number;
-      price: number;
-      name: string;
-      default_promocode?: string | null;
-      default_promocode_value?: number | null;
-      default_offer_type?: string | null;
-      default_offer_display_text?: string | null;
-      default_product_qty?: number | null;
-      default_offer_product_qty?: number | null;
-      cashback_offer_value?: number | null;
-      cashback_offer_type?: string | null;
-      cashback_offer_name?: string | null;
-      default_offer_tnc?: string | null;
-      service_charge: number;
-    };
-    GetBrandResponse: {
-      code: number;
-      error?: string;
-      message?: string;
-      status: string;
-      data?: components["schemas"]["BrandDetails"];
-      products?: components["schemas"]["Product"][];
-    };
-    CartProduct: {
-      quantity: number;
-      id: number;
-      name: string;
-      /** Format: email */
-      email: string;
-      mobile: string;
-      sendername?: string;
-      template_id?: number | null;
-      gift_status?: string;
-      gift_text?: string;
-      gift_imgurl?: string;
-      promo?: string;
-      mode: string;
-    };
-    AddToCartRequest: {
-      products: components["schemas"]["CartProduct"][];
-    };
-    AddToCartResponse: {
-      code: number;
-      error?: string;
-      message?: string;
-      status: string;
-      cartItemIds: string;
-    };
-    CreateOrderRequest: {
-      cart_item_ids: string;
-      /** Format: email */
-      email: string;
-      mobile: string;
-      mode?: string;
-      name: string;
-      user_id?: string;
-      utmsource?: string;
-    };
-    FormAction: {
-      /** Format: uri */
-      web: string;
-      /** Format: date-time */
-      expiry?: string;
-    };
-    PaymentFilterOption: {
-      enable: boolean;
-      paymentMethodType: string;
-    };
-    FormDataPayload: {
-      clientId: string;
-      customerId: string;
-      orderId: string;
-      /** Format: uri */
-      returnUrl: string;
-      currency: string;
-      customerEmail: string;
-      customerPhone: string;
-      service: string;
-      description: string;
-      environment: string;
-      merchantId: string;
-      amount: string;
-      /** Format: date-time */
-      clientAuthTokenExpiry: string;
-      clientAuthToken: string;
-      action: string;
-      paymentFilter?: {
-        allowDefaultOptions?: boolean;
-        options?: components["schemas"]["PaymentFilterOption"][];
-      };
-      sdkUdf?: {
-        EMI?: string;
-      };
-      collectAvsInfo?: boolean;
-    };
-    FormData: {
-      requestId: string;
-      service: string;
-      payload: components["schemas"]["FormDataPayload"];
-      /** Format: date-time */
-      expiry?: string;
-    };
-    CreateOrderResponse: {
-      code: number;
-      error?: string;
-      message?: string;
-      status: string;
-      formAction: components["schemas"]["FormAction"];
-      formData: components["schemas"]["FormData"];
-    };
-  };
-  responses: never;
-  parameters: {
-    AcceptHeader: string;
-    AcceptEncodingHeader: string;
-    AcceptLanguageHeader: string;
-    ContentTypeHeader: string;
-    DNTHeader: string;
-    OriginHeader: string;
-    PriorityHeader: string;
-    SecChUaHeader: string;
-    SecChUaMobileHeader: string;
-    SecChUaPlatformHeader: string;
-    SecFetchDestHeader: string;
-    SecFetchModeHeader: string;
-    SecFetchSiteHeader: string;
-    UserAgentHeader: string;
-    /** @description Authentication token for protected endpoints. */
-    TokenHeader: string;
-    /** @description The unique slug identifying the brand. */
-    SlugPath: string;
-  };
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  requestOtp: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AuthRequest"];
-      };
-    };
-    responses: {
-      /** @description OTP sent successfully. */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    requestOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": {
-            /** @description HTTP status code. */
-            code: number;
-            /** @description Error status indicator. '0' for success. */
-            error_status: string;
-            /** @description A confirmation message. */
-            message: string;
-          };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthRequest"];
+            };
         };
-      };
-    };
-  };
-  validateOtp: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AuthValidateRequest"];
-      };
-    };
-    responses: {
-      /** @description Authentication successful. */
-      200: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description OTP sent successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description HTTP status code. */
+                        code: number;
+                        /** @description Error status indicator. '0' for success. */
+                        error_status: string;
+                        /** @description A confirmation message. */
+                        message: string;
+                    };
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["AuthValidateResponse"];
+    };
+    validateOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  getBrandBySlug: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description The unique slug identifying the brand. */
-        slug: components["parameters"]["SlugPath"];
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successfully retrieved brand details. */
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthValidateRequest"];
+            };
         };
-        content: {
-          "application/json": components["schemas"]["GetBrandResponse"];
+        responses: {
+            /** @description Authentication successful. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthValidateResponse"];
+                };
+            };
         };
-      };
     };
-  };
-  addToCart: {
-    parameters: {
-      query?: never;
-      header: {
-        /** @description Authentication token for protected endpoints. */
-        token: components["parameters"]["TokenHeader"];
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["AddToCartRequest"];
-      };
-    };
-    responses: {
-      /** @description Products successfully added to the cart. */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    getBrandBySlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The unique slug identifying the brand. */
+                slug: components["parameters"]["SlugPath"];
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["AddToCartResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description Successfully retrieved brand details. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetBrandResponse"];
+                };
+            };
         };
-      };
     };
-  };
-  createOrder: {
-    parameters: {
-      query?: never;
-      header: {
-        /** @description Authentication token for protected endpoints. */
-        token: components["parameters"]["TokenHeader"];
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateOrderRequest"];
-      };
-    };
-    responses: {
-      /** @description Order created successfully and payment form details returned. */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    addToCart: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Authentication token for protected endpoints. */
+                token: components["parameters"]["TokenHeader"];
+            };
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["CreateOrderResponse"];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddToCartRequest"];
+            };
         };
-      };
+        responses: {
+            /** @description Products successfully added to the cart. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddToCartResponse"];
+                };
+            };
+        };
     };
-  };
+    createOrder: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Authentication token for protected endpoints. */
+                token: components["parameters"]["TokenHeader"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description Order created successfully and payment form details returned. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreateOrderResponse"];
+                };
+            };
+            /** @description Bad Request - business logic error like exceeding limits. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
 }

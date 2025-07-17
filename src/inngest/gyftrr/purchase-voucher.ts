@@ -46,7 +46,6 @@ export const gyftrrPurchaseVoucherEventHandler = createEventHandler<
   GYFTRR_PURCHASE_VOUCHER_EVENT,
   GYFTRR_PURCHASE_VOUCHER_EVENT,
   { limit: 1 }, // Allow only one Gyftrr purchase voucher at a time
-  3, // Retry count
   GyftrrPurchaseVoucherSchema,
   handler,
   GyftrrPurchaseVoucherResultSchema,

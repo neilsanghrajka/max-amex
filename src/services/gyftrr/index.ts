@@ -80,9 +80,9 @@ export async function isPurchasePossible(
 }
 
 /**
- * Complete voucher purchase flow and return payment link
+ * Create payment links for a given total amount and quantity
  */
-export async function initiateVoucherPurchase(
+export async function createPaymentLinks(
   authToken: string,
   totalAmount: number,
   email: string,

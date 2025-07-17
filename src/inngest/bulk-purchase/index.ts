@@ -7,9 +7,14 @@ import {
 import { amazonLoginEventHandler } from "@/inngest/amazon";
 import { gyftrrLoginEventHandler } from "@/inngest/gyftrr";
 import { purchaseEventHandler } from "@/inngest/bulk-purchase/purchase";
+import { initiatePaymentEventHandler } from "@/inngest/bulk-purchase/initiate-payment";
 import { isPurchasePossible } from "@/services/gyftrr";
 import { GyftrrSession, User } from "@/inngest/types";
 import { VoucherBrand } from "@/services/gyftrr/utils";
+import {
+  PaymentLinkError,
+  PaymentLinkErrorType,
+} from "@/services/gyftrr/types";
 
 const BULK_PURCHASE_INITIATE_EVENT = EventNames.BULK_PURCHASE_INITIATE;
 
@@ -31,7 +36,7 @@ const handler: EventHandler<
   typeof BulkPurchaseInitiateSchema,
   typeof BulkPurchaseInitiateResultSchema
 > = async (data, step) => {
-  // Check if there are vouchers even available
+  // Step 1: Check if there are vouchers even available
   const { possible, message } = await step.run(
     "Check GyftrrVoucher Inventory",
     async () => {
@@ -54,7 +59,7 @@ const handler: EventHandler<
     };
   }
 
-  // Invoke Amazon and Gyftr login functions in parallel
+  // Step 2:Invoke Amazon and Gyftr login functions in parallel
   const amazonLoginPromise = step.invoke("Amazon Login", {
     function: amazonLoginEventHandler,
     data: {},
@@ -83,25 +88,67 @@ const handler: EventHandler<
     return gyftrSession;
   });
 
-  // PURCHASE
-  // ----------------------------------------
-
-  // Sequential fan-out: invoke each purchase one after another
+  // Step 3: Parallel Payment Initiation (Limit Probe)
+  const paymentPromises = [];
   for (let i = 0; i < PURCHASE_COUNT; i++) {
-    await step.invoke(`purchase-${i + 1}`, {
-      function: purchaseEventHandler,
-      data: {
-        jobId: data.jobId,
-        index: i + 1,
-        gyftrrSession,
-        user,
-        details: {
-          totalAmount: TOTAL_AMOUNT,
-          brand: BRAND,
+    paymentPromises.push(
+      step.invoke(`initiate-payment-${i + 1}`, {
+        function: initiatePaymentEventHandler,
+        data: {
+          jobId: data.jobId,
+          index: i + 1,
+          gyftrrSession,
+          user,
+          details: {
+            totalAmount: TOTAL_AMOUNT,
+            brand: BRAND,
+          },
         },
-      },
-    });
+      }),
+    );
   }
+
+  // Manual error handling for payment initiation
+  let paymentResults;
+  try {
+    paymentResults = await Promise.all(paymentPromises);
+  } catch (error) {
+    if (
+      error instanceof PaymentLinkError &&
+      error.type === PaymentLinkErrorType.MONTHLY_LIMIT_EXCEEDED
+    ) {
+      console.log("Monthly limit exceeded:", error.message);
+      return {
+        jobId: data.jobId,
+        status: "failed",
+        message: "User monthly limit exceeded",
+      };
+    }
+    throw error; // Re-throw other errors
+  }
+
+  // Step 4: Parallel Purchases (only if all payment links succeeded)
+  const purchasePromises = [];
+  for (let i = 0; i < PURCHASE_COUNT; i++) {
+    purchasePromises.push(
+      step.invoke(`purchase-${i + 1}`, {
+        function: purchaseEventHandler,
+        data: {
+          jobId: data.jobId,
+          index: i + 1,
+          paymentLink: paymentResults[i].paymentLink,
+          gyftrrSession,
+          user,
+          details: {
+            totalAmount: TOTAL_AMOUNT,
+            brand: BRAND,
+          },
+        },
+      }),
+    );
+  }
+
+  await Promise.all(purchasePromises);
 
   return {
     jobId: data.jobId,
@@ -117,7 +164,6 @@ export const bulkPurchaseInitiatedEventHandler = createEventHandler<
   BULK_PURCHASE_INITIATE_EVENT,
   BULK_PURCHASE_INITIATE_EVENT,
   { limit: 1, key: "event.data.jobId" },
-  1,
   BulkPurchaseInitiateSchema,
   handler,
   BulkPurchaseInitiateResultSchema,

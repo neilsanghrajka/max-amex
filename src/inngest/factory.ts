@@ -43,10 +43,10 @@ export const createEventHandler = <
   eventName: E,
   eventId: string,
   concurrencyConfig: ConcurrencyOption,
-  retryCount: RetryCount,
   schema: S,
   handler: (data: DataType, step: FnInput["step"]) => Promise<Result>,
   outputSchema: R,
+  retryCount: RetryCount = 0,
 ) => {
   return inngest.createFunction(
     {

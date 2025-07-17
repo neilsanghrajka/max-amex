@@ -45,7 +45,6 @@ export const amazonRedeemEventHandler = createEventHandler<
   AMAZON_REDEEM_EVENT,
   AMAZON_REDEEM_EVENT,
   { limit: 1 }, // Allow only one Amazon redeem at a time
-  3, // Retry count
   AmazonRedeemSchema,
   handler,
   AmazonRedeemResultSchema,

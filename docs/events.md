@@ -96,9 +96,9 @@ export const userSignedUpEventHandler = createEventHandler(
   USER_SIGNED_UP_EVENT,
   USER_SIGNED_UP_EVENT,
   { limit: 5 },
-  3,
   UserSignedUpSchema,
   handler,
+  1,
 );
 ```
 

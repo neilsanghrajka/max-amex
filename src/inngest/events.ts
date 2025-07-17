@@ -13,6 +13,7 @@ import {
 export const EventNames = {
   BULK_PURCHASE_INITIATE: "bulk-purchase/initiate",
   PURCHASE: "bulk-purchase/purchase",
+  INITIATE_PAYMENT: "bulk-purchase/initiate-payment",
   OTP_RECEIVED: "otp/received",
   OTP_GET: "otp/get",
   AMAZON_LOGIN: "amazon/login",

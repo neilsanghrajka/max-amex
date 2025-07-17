@@ -1,5 +1,6 @@
 import { components } from "./types";
 import { validateResponse, VoucherBrand } from "./utils";
+import { classifyPaymentLinkError, PaymentLinkErrorType } from "./error-classifier";
 
 // Type aliases for better readability
 type AuthRequest = components["schemas"]["AuthRequest"];
@@ -12,6 +13,7 @@ type AddToCartRequest = components["schemas"]["AddToCartRequest"];
 type AddToCartResponse = components["schemas"]["AddToCartResponse"];
 type CreateOrderRequest = components["schemas"]["CreateOrderRequest"];
 type CreateOrderResponse = components["schemas"]["CreateOrderResponse"];
+export type ErrorResponse = components["schemas"]["ErrorResponse"];
 
 const BASE_URL = "https://api.gyftr.com/amex-api/api/v1";
 
@@ -221,13 +223,26 @@ export async function createPaymentLink(
     if (validateResponse(data, 201)) {
       const paymentUrl = data.formAction?.web;
       console.log("Payment link created:", paymentUrl);
-      return paymentUrl || null;
+      return paymentUrl;
     } else {
       console.error("Failed to create payment link:", data);
-      return null;
+
+      // Classify the error using Gemini
+      const errorResponse = data as ErrorResponse;
+      const { type } = await classifyPaymentLinkError(errorResponse);
+
+      throw new PaymentLinkError(`Failed to create payment link: ${errorResponse.message}`, type);
     }
   } catch (error) {
     console.error("Error creating payment link:", error);
     return null;
+  }
+}
+
+
+class PaymentLinkError extends Error {
+  constructor(message: string, public type: PaymentLinkErrorType) {
+    super(message);
+    this.name = "PaymentLinkError";
   }
 }

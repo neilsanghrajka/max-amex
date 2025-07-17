@@ -24,6 +24,7 @@ export type BulkPurchaseInitiateResult = z.infer<
 export const PurchaseSchema = z.object({
   jobId: z.number(),
   index: z.number(),
+  paymentLink: z.string(),
   gyftrrSession: GyftrrSession,
   user: User,
   details: z.object({
@@ -46,4 +47,28 @@ export type PurchaseResult = z.infer<typeof PurchaseResultSchema>;
 export type BulkPurchaseStep = GetStepTools<
   typeof inngest,
   typeof EventNames.BULK_PURCHASE_INITIATE
+>;
+
+// Initiate Payment Schema
+export const InitiatePaymentSchema = z.object({
+  jobId: z.string(),
+  index: z.number(),
+  gyftrrSession: GyftrrSession,
+  user: User,
+  details: z.object({
+    totalAmount: z.number(),
+    brand: z.enum(Object.values(VoucherBrand)),
+  }),
+});
+
+export const InitiatePaymentResultSchema = z.object({
+  success: z.boolean(),
+  paymentLink: z.string(),
+  jobId: z.string(),
+  index: z.number(),
+});
+
+export type InitiatePaymentType = z.infer<typeof InitiatePaymentSchema>;
+export type InitiatePaymentResultType = z.infer<
+  typeof InitiatePaymentResultSchema
 >;

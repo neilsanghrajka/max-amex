@@ -80,7 +80,6 @@ export const gyftrrLoginEventHandler = createEventHandler<
   GYFTRR_LOGIN_EVENT,
   GYFTRR_LOGIN_EVENT,
   { limit: 1 }, // Allow only one Gyftrr login at a time
-  3, // Retry count
   GyftrrLoginSchema,
   handler,
   GyftrrLoginResultSchema,

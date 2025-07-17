@@ -6,7 +6,6 @@ import {
 } from "@/inngest/bulk-purchase/types";
 import { gyftrrPurchaseVoucherEventHandler } from "@/inngest/gyftrr/purchase-voucher";
 import { amazonRedeemEventHandler } from "@/inngest/amazon/redeem";
-import { initiateVoucherPurchase } from "@/services/gyftrr";
 
 const PURCHASE_EVENT = EventNames.PURCHASE;
 
@@ -16,18 +15,8 @@ const handler: EventHandler<
   typeof PurchaseSchema,
   typeof PurchaseResultSchema
 > = async (data, step) => {
-  const { gyftrrSession, user, details } = data;
-
-  // Create Payment Link
-  const paymentLink = await step.run("Generate Payment Link", async () => {
-    return await initiateVoucherPurchase(
-      gyftrrSession.authToken,
-      details.totalAmount,
-      user.email,
-      user.mobileNumber,
-      details.brand,
-    );
-  });
+  // Payment link should be passed in from the initiate payment step
+  const { paymentLink } = data;
 
   // Log payment link
   await step.run("log-payment-link", async () => {
@@ -95,9 +84,9 @@ export const purchaseEventHandler = createEventHandler<
 >(
   PURCHASE_EVENT,
   PURCHASE_EVENT,
-  { limit: 1 },
-  3,
+  { limit: 4, key: "event.data.jobId" }, // Allow up to 4 concurrent purchases per job
   PurchaseSchema,
   handler,
   PurchaseResultSchema,
+  3,
 );

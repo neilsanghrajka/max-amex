@@ -148,6 +148,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreateOrderResponse"
+        "400":
+          description: Bad Request - business logic error like exceeding limits.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   parameters:
     AcceptHeader:
@@ -331,6 +337,22 @@ components:
         auth_token:
           type: string
           description: JWT authentication token.
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - error
+        - message
+        - status
+      properties:
+        code:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
     BrandDetails:
       type: object
       required:

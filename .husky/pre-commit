@@ -22,4 +22,8 @@ fi
 
 echo "✅  No pending migrations found."
 
-pnpm format && pnpm lint 
+echo "Running format..."
+pnpm format
+
+echo "Running lint..."
+pnpm lint 

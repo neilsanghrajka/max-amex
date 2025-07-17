@@ -82,7 +82,7 @@ export function validateResponse<T extends { code?: number }>(
   response: T | null | undefined,
   expectedCode: number = 200,
 ): response is T & { code: number } {
-  if (response && response.code && response.code === expectedCode) {
+  if (response && response?.code === expectedCode) {
     console.log("Response:", response);
     return true;
   } else {
