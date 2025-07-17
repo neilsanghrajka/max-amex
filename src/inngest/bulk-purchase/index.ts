@@ -20,6 +20,8 @@ const handler: EventHandler<
   typeof BulkPurchaseInitiateSchema,
   typeof BulkPurchaseInitiateResultSchema
 > = async (data, step) => {
+  // Instantiate job start utc time.
+
   // Invoke Amazon and Gyftr login functions in parallel
   const amazonLoginPromise = step.invoke("amazon-login", {
     function: amazonLoginEventHandler,
@@ -34,7 +36,15 @@ const handler: EventHandler<
     },
   });
 
-  await Promise.all([amazonLoginPromise, gyftrLoginPromise]);
+  const [amazonLoginResult, gyftrLoginResult] = await Promise.all([
+    amazonLoginPromise,
+    gyftrLoginPromise,
+  ]);
+
+  await step.run("log-results", async () => {
+    console.log("amazonLoginResult", amazonLoginResult);
+    console.log("gyftrLoginResult", gyftrLoginResult);
+  });
 
   // PURCHASE
   // ----------------------------------------

@@ -24,18 +24,20 @@ const handler: EventHandler<
   });
 
   // Request OTP
-  await step.run("Request OTP", async () => {
+  const { startTimeUtc } = await step.run("Request OTP", async () => {
+    const startTimeUtc = new Date().toISOString();
     const success = await requestOtp(data.mobile, data.email);
 
     if (!success) {
       throw new Error("Failed to request OTP");
     }
 
-    return { success: true, message: "OTP requested successfully" };
+    return {
+      success: true,
+      message: "OTP requested successfully",
+      startTimeUtc,
+    };
   });
-
-  // Wait for OTP
-  await step.sleep("Wait for OTP", "10 seconds");
 
   const otp = await step.invoke("Get OTP", {
     function: getOtpEventHandler,
@@ -43,7 +45,7 @@ const handler: EventHandler<
       senderPhone: data.mobile,
       portal: Portal.GYFTR_AMEX_REWARDS_MULTIPLIER,
       otpType: OTPType.ACCOUNT_LOGIN,
-      startTime: new Date().toISOString(), // TODO: Check UTC time here
+      startTime: startTimeUtc,
     },
   });
 

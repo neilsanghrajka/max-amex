@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { generateStructuredOutput } from "@/lib/llm/client";
+import { generateStructuredOutput } from "@/lib/llm";
 import { Portal, OTPType } from "./types";
 import { SmsWebhook } from "@/db/schema/smsWebhooks";
 
@@ -83,11 +83,14 @@ export async function extractOtpFromMessage(
       SYSTEM_PROMPT,
       userPrompt,
       OTPSchema,
-      "otp_extraction",
     );
 
     // Validate that the extracted portal and type match what we're looking for
-    if (result.portal === portal && result.otp_type === otpType && result.otp) {
+    if (
+      result?.portal === portal &&
+      result?.otp_type === otpType &&
+      result?.otp
+    ) {
       return result;
     }
 

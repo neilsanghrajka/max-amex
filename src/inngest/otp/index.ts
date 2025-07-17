@@ -18,24 +18,25 @@ const handler: EventHandler<
   });
 
   // Attempt to get OTP from service
-  const otp = await step.run("Get OTP", async () => {
-    return await getOtp(
+  const result = await step.run("Get OTP", async () => {
+    const otpResult = await getOtp(
       data.senderPhone,
       data.startTime,
       data.portal,
       data.otpType,
     );
+
+    if (!otpResult) {
+      throw new RetryAfterError(
+        "No OTP found",
+        10 * 1000, // Retry every 10 seconds
+      );
+    }
+
+    return otpResult;
   });
 
-  // If no OTP found, throw error and tell Inngest to retry after 10 seconds
-  if (!otp) {
-    throw new RetryAfterError(
-      "No OTP found",
-      10 * 1000, // Retry every 10 seconds
-    );
-  }
-
-  return otp; // TODO: Add return type to the function and to EventHandler
+  return result;
 };
 
 // EVENT FUNCTION

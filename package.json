@@ -16,6 +16,7 @@
     "types:generate": "pnpm dlx openapi-typescript src/services/gyftr/schema.yaml -o src/services/gyftr/types.ts"
   },
   "dependencies": {
+    "@google/genai": "^1.10.0",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@supabase/ssr": "^0.6.1",
@@ -27,7 +28,6 @@
     "inngest": "^3.40.1",
     "lucide-react": "^0.525.0",
     "next": "15.3.4",
-    "openai": "^5.9.2",
     "postgres": "^3.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
