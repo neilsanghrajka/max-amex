@@ -6,6 +6,7 @@ import {
 } from "@/inngest/bulk-purchase/types";
 import { gyftrrPurchaseVoucherEventHandler } from "@/inngest/gyftrr/purchase-voucher";
 import { amazonRedeemEventHandler } from "@/inngest/amazon/redeem";
+import { initiateVoucherPurchase } from "@/services/gyftrr";
 
 const PURCHASE_EVENT = EventNames.PURCHASE;
 
@@ -15,19 +16,28 @@ const handler: EventHandler<
   typeof PurchaseSchema,
   typeof PurchaseResultSchema
 > = async (data, step) => {
-  await step.run("log-start", async () => {
-    console.log(`Purchase ${data.index} for job ${data.jobId}`);
-    return { logged: true };
+  const { gyftrrSession, user, details } = data;
+
+  // Create Payment Link
+  const paymentLink = await step.run("Generate Payment Link", async () => {
+    return await initiateVoucherPurchase(
+      gyftrrSession.authToken,
+      details.totalAmount,
+      user.email,
+      user.mobileNumber,
+      details.brand,
+    );
   });
 
-  await step.run("generate-payment-link", async () => {
-    const paymentLink = `https://gyftr.com/payment/voucher-${data.jobId}-${data.index}`;
-    console.log(
-      `Generated payment link for purchase ${data.index}: ${paymentLink}`,
-    );
+  // Log payment link
+  await step.run("log-payment-link", async () => {
+    console.log("================================================");
+    console.log(`Payment link for purchase ${data.index}: ${paymentLink}`);
+    console.log("================================================");
     return { paymentLink };
   });
 
+  // Invoke Gyftrr Purchase Voucher
   await step.invoke("gyftrr-purchase-voucher", {
     function: gyftrrPurchaseVoucherEventHandler,
     data: {

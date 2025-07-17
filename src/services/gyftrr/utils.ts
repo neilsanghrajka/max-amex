@@ -1,3 +1,11 @@
+import { CartProduct, SimpleProduct } from "./client";
+
+export enum VoucherBrand {
+  AMAZON = "amazon-gift-vouchers",
+}
+
+export const SUPPORTED_AMOUNTS = new Set([1000, 1500]);
+
 export interface VoucherInventory {
   [amount: number]: {
     id: number;
@@ -81,4 +89,82 @@ export function validateResponse<T extends { code?: number }>(
     console.log("Error:", response);
     return false;
   }
+}
+
+/**
+ * Create a cart product with default values
+ */
+export function createCartProduct(
+  productId: number,
+  quantity: number,
+  email: string,
+  mobileNumber: string,
+): CartProduct {
+  return {
+    id: productId,
+    quantity,
+    name: "",
+    email,
+    mobile: mobileNumber,
+    sendername: "",
+    template_id: null,
+    gift_status: "",
+    gift_text: "",
+    gift_imgurl: "",
+    promo: "",
+    mode: "N",
+  };
+}
+
+/**
+ * Construct cart based on available products and target amount
+ */
+export function constructCart(
+  availableProducts: SimpleProduct[],
+  totalAmount: number,
+  email: string,
+  mobileNumber: string,
+): CartProduct[] {
+  if (!SUPPORTED_AMOUNTS.has(totalAmount)) {
+    throw new Error("Total amount must be 1000 or 1500");
+  }
+
+  // Build voucher inventory lookup
+  const voucherInventory: VoucherInventory = {};
+  for (const product of availableProducts) {
+    const price = Math.round(product.price);
+    voucherInventory[price] = {
+      id: product.id,
+      qty: product.quantity,
+    };
+  }
+
+  // Find optimal combination
+  const cartItems: CartProduct[] = [];
+
+  if (totalAmount === 1000) {
+    const spec = findVoucherCombinationFor1000(voucherInventory);
+    cartItems.push(
+      createCartProduct(
+        voucherInventory[spec.amount].id,
+        spec.quantity,
+        email,
+        mobileNumber,
+      ),
+    );
+  } else if (totalAmount === 1500) {
+    const specs = findVoucherCombinationFor1500(voucherInventory);
+    for (const spec of specs) {
+      cartItems.push(
+        createCartProduct(
+          voucherInventory[spec.amount].id,
+          spec.quantity,
+          email,
+          mobileNumber,
+        ),
+      );
+    }
+  }
+
+  return cartItems;
 }

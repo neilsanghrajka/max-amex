@@ -2,6 +2,8 @@ import { z } from "zod";
 import { type GetStepTools } from "inngest";
 import { inngest } from "@/inngest/client";
 import { EventNames } from "@/inngest/events";
+import { GyftrrSession, User } from "@/inngest/types";
+import { VoucherBrand } from "@/services/gyftrr/utils";
 
 export const BulkPurchaseInitiateSchema = z.object({
   jobId: z.number(),
@@ -13,7 +15,6 @@ export type BulkPurchaseInitiateType = z.infer<
 
 export const BulkPurchaseInitiateResultSchema = z.object({
   jobId: z.number(),
-  purchaseCount: z.number(),
 });
 
 export type BulkPurchaseInitiateResult = z.infer<
@@ -23,6 +24,12 @@ export type BulkPurchaseInitiateResult = z.infer<
 export const PurchaseSchema = z.object({
   jobId: z.number(),
   index: z.number(),
+  gyftrrSession: GyftrrSession,
+  user: User,
+  details: z.object({
+    totalAmount: z.number(),
+    brand: z.enum(Object.values(VoucherBrand)),
+  }),
 });
 
 export type PurchaseType = z.infer<typeof PurchaseSchema>;
