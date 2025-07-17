@@ -13,8 +13,8 @@ const BULK_PURCHASE_INITIATE_EVENT = EventNames.BULK_PURCHASE_INITIATE;
 // TODO: Remove hardcoded email and mobile
 const EMAIL = "sanghrajka.neil@gmail.com";
 const MOBILE = "8879472388";
-const AMAZON_EMAIL = "sanghrajka.neil@gmail.com";
-const AMAZON_MOBILE = "8879472388";
+// const AMAZON_EMAIL = "sanghrajka.neil@gmail.com";
+// const AMAZON_MOBILE = "8879472388";
 
 // EVENT HANDLER
 const handler: EventHandler<
