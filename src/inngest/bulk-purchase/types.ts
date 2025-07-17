@@ -22,14 +22,14 @@ export type BulkPurchaseInitiateResult = z.infer<
 
 export const PurchaseSchema = z.object({
   jobId: z.number(),
-  ordinal: z.number(),
+  index: z.number(),
 });
 
 export type PurchaseType = z.infer<typeof PurchaseSchema>;
 
 export const PurchaseResultSchema = z.object({
   success: z.boolean(),
-  ordinal: z.number(),
+  index: z.number(),
   jobId: z.number(),
   voucherCodes: z.array(z.string()),
 });

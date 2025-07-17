@@ -16,7 +16,7 @@ const handler: EventHandler<
 > = async (data: AmazonRedeemType, step) => {
   await step.run("log-start", async () => {
     console.log(
-      `Amazon redeem for job ${data.jobId}, ordinal ${data.ordinal}, voucher: ${data.voucherCode}`,
+      `Amazon redeem for job ${data.jobId}, index ${data.index}, voucher: ${data.voucherCode}`,
     );
     return { logged: true };
   });
@@ -31,7 +31,7 @@ const handler: EventHandler<
   return {
     success: true,
     jobId: data.jobId,
-    ordinal: data.ordinal,
+    index: data.index,
     voucherCode: data.voucherCode,
   };
 };

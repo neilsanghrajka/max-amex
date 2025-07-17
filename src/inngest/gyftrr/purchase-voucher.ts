@@ -16,7 +16,7 @@ const handler: EventHandler<
 > = async (data: GyftrrPurchaseVoucherType, step) => {
   await step.run("log-start", async () => {
     console.log(
-      `Gyftrr purchase voucher for job ${data.jobId}, ordinal ${data.ordinal}`,
+      `Gyftrr purchase voucher for job ${data.jobId}, index ${data.index}`,
     );
     return { logged: true };
   });
@@ -25,7 +25,7 @@ const handler: EventHandler<
 
   await step.run("log-completion", async () => {
     console.log(
-      `Gyftrr purchase voucher completed for job ${data.jobId}, ordinal ${data.ordinal}`,
+      `Gyftrr purchase voucher completed for job ${data.jobId}, index ${data.index}`,
     );
     return { logged: true };
   });
@@ -33,7 +33,7 @@ const handler: EventHandler<
   return {
     success: true,
     jobId: data.jobId,
-    ordinal: data.ordinal,
+    index: data.index,
   };
 };
 

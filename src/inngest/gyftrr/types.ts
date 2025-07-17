@@ -15,7 +15,7 @@ export type GyftrrLoginResult = z.infer<typeof GyftrrLoginResultSchema>;
 
 export const GyftrrPurchaseVoucherSchema = z.object({
   jobId: z.number(),
-  ordinal: z.number(),
+  index: z.number(),
 });
 
 export type GyftrrPurchaseVoucherType = z.infer<
@@ -25,7 +25,7 @@ export type GyftrrPurchaseVoucherType = z.infer<
 export const GyftrrPurchaseVoucherResultSchema = z.object({
   success: z.boolean(),
   jobId: z.number(),
-  ordinal: z.number(),
+  index: z.number(),
 });
 
 export type GyftrrPurchaseVoucherResult = z.infer<

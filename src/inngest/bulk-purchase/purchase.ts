@@ -16,14 +16,14 @@ const handler: EventHandler<
   typeof PurchaseResultSchema
 > = async (data, step) => {
   await step.run("log-start", async () => {
-    console.log(`Purchase ${data.ordinal} for job ${data.jobId}`);
+    console.log(`Purchase ${data.index} for job ${data.jobId}`);
     return { logged: true };
   });
 
   await step.run("generate-payment-link", async () => {
-    const paymentLink = `https://gyftr.com/payment/voucher-${data.jobId}-${data.ordinal}`;
+    const paymentLink = `https://gyftr.com/payment/voucher-${data.jobId}-${data.index}`;
     console.log(
-      `Generated payment link for purchase ${data.ordinal}: ${paymentLink}`,
+      `Generated payment link for purchase ${data.index}: ${paymentLink}`,
     );
     return { paymentLink };
   });
@@ -32,19 +32,19 @@ const handler: EventHandler<
     function: gyftrrPurchaseVoucherEventHandler,
     data: {
       jobId: data.jobId,
-      ordinal: data.ordinal,
+      index: data.index,
     },
   });
 
   // Hard-coded voucher codes for now (in real implementation, these would come from elsewhere)
   const voucherCodes = [
-    `VOUCHER-${data.jobId}-${data.ordinal}-1`,
-    `VOUCHER-${data.jobId}-${data.ordinal}-2`,
+    `VOUCHER-${data.jobId}-${data.index}-1`,
+    `VOUCHER-${data.jobId}-${data.index}-2`,
   ];
 
   await step.run("log-voucher-codes", async () => {
     console.log(
-      `Generated voucher codes for purchase ${data.ordinal}:`,
+      `Generated voucher codes for purchase ${data.index}:`,
       voucherCodes,
     );
     return { voucherCodes };
@@ -56,7 +56,7 @@ const handler: EventHandler<
       function: amazonRedeemEventHandler,
       data: {
         jobId: data.jobId,
-        ordinal: data.ordinal,
+        index: data.index,
         voucherCode: voucherCodes[i],
       },
     });
@@ -65,13 +65,13 @@ const handler: EventHandler<
   await step.sleep("dummy-wait", "5s");
 
   await step.run("log-completion", async () => {
-    console.log(`Purchase ${data.ordinal} for job ${data.jobId} completed`);
+    console.log(`Purchase ${data.index} for job ${data.jobId} completed`);
     return { logged: true };
   });
 
   return {
     success: true,
-    ordinal: data.ordinal,
+    index: data.index,
     jobId: data.jobId,
     voucherCodes,
   };
