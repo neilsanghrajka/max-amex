@@ -5,7 +5,7 @@ import {
   InitiatePaymentType,
   InitiatePaymentResultSchema,
 } from "@/inngest/bulk-purchase/types";
-import { createPaymentLinks } from "@/services/gyftrr";
+import { initiatePayment } from "@/services/gyftrr";
 
 const INITIATE_PAYMENT_EVENT = EventNames.INITIATE_PAYMENT;
 
@@ -19,7 +19,7 @@ const handler: EventHandler<
 
   // Create Payment Link
   const paymentLink = await step.run("Generate Payment Link", async () => {
-    return await createPaymentLinks(
+    return await initiatePayment(
       gyftrrSession.authToken,
       details.totalAmount,
       user.email,
@@ -47,7 +47,6 @@ export const initiatePaymentEventHandler = createEventHandler<
   INITIATE_PAYMENT_EVENT,
   INITIATE_PAYMENT_EVENT,
   { limit: 6, key: "event.data.jobId" }, // Allow up to 6 concurrent payment initiations per job
-  0,
   InitiatePaymentSchema,
   handler,
   InitiatePaymentResultSchema,

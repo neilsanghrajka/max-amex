@@ -82,7 +82,7 @@ export async function isPurchasePossible(
 /**
  * Create payment links for a given total amount and quantity
  */
-export async function createPaymentLinks(
+export async function initiatePayment(
   authToken: string,
   totalAmount: number,
   email: string,
@@ -108,6 +108,7 @@ export async function createPaymentLinks(
   }
 
   // Create payment link
+
   const paymentLink = await createPaymentLink(
     authToken,
     cartItemIds,

@@ -1,5 +1,6 @@
 import {
   BulkPurchaseInitiateSchema,
+  InitiatePaymentSchema,
   PurchaseSchema,
 } from "@/inngest/bulk-purchase/types";
 import { OtpReceivedSchema, GetOtpSchema } from "@/inngest/otp/types";
@@ -33,4 +34,5 @@ export const AppEventSchemas = {
   [EventNames.AMAZON_REDEEM]: AmazonRedeemSchema,
   [EventNames.GYFTRR_LOGIN]: GyftrrLoginSchema,
   [EventNames.GYFTRR_PURCHASE_VOUCHER]: GyftrrPurchaseVoucherSchema,
+  [EventNames.INITIATE_PAYMENT]: InitiatePaymentSchema,
 };
