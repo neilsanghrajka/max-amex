@@ -114,7 +114,7 @@ const handler: EventHandler<
       throw new NonRetriableError("Failed to generate payment link", {
         cause: errorType,
       });
-    } 
+    }
 
     paymentLinks.push(paymentLink);
   }
